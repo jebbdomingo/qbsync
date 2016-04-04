@@ -17,9 +17,7 @@ ini_set('display_errors', 1);
 require_once dirname(__FILE__) . '/../../../QuickBooks.php';
 
 // Your application token (Intuit will give you this when you register an Intuit Anywhere app)
-//$token = '95555248baf11b43fbb944ab97de9134ad85';
-$token = '8eb582aeb4fb7b429ebb0ffb52562317e6d0';
-//$token = '1f87c6ccbaf28b46b5b9bccbcbb08a7c0eba';
+$token = '8eb582aeb4fb7b429ebb0ffb52562317e6d0'; // sandbox
 
 // Your OAuth consumer key and secret (Intuit will give you both of these when you register an Intuit app)
 // 
@@ -29,11 +27,8 @@ $token = '8eb582aeb4fb7b429ebb0ffb52562317e6d0';
 // 
 // The OAuth request/access tokens will be encrypted and stored for you by the 
 //	PHP DevKit IntuitAnywhere classes automatically. 
-//$oauth_consumer_key = 'qyprdfkqo3bikN2vLrLu4FWHv6GbQp';
-$oauth_consumer_key = 'qyprdfgY2z15AAY29sqpYyGOc0OxUh';
-//$oauth_consumer_key = 'qyprdHGJktlzfNqnscAsOk3zHgXs5e';
-//$oauth_consumer_secret = 'WDH56afDb1jr0ismQZAwdPuq4oDqpTmrKXc0oORz';
-$oauth_consumer_secret = 'KOGNeRcZwKwO5TcWpTalbg0CYQoFhbTlfP0NUTFQ';
+$oauth_consumer_key = 'qyprdfgY2z15AAY29sqpYyGOc0OxUh'; // sandbox
+$oauth_consumer_secret = 'KOGNeRcZwKwO5TcWpTalbg0CYQoFhbTlfP0NUTFQ'; // sandbox
 //$oauth_consumer_secret = 'FvmvQCjot8byjQRgYXMxOOU3zNIhyXeqFnIhG6kd';
 
 // If you're using DEVELOPMENT TOKENS, you MUST USE SANDBOX MODE!!!  If you're in PRODUCTION, then DO NOT use sandbox.
@@ -41,18 +36,18 @@ $sandbox = true;     // When you're using development tokens
 //$sandbox = false;    // When you're using production tokens
 
 // This is the URL of your OAuth auth handler page
-$quickbooks_oauth_url = 'http://joomla.box/quickbooks/docs/partner_platform/example_app_ipp_v3/oauth.php';
+$quickbooks_oauth_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/oauth.php'; // beta
 
 // This is the URL to forward the user to after they have connected to IPP/IDS via OAuth
-$quickbooks_success_url = 'http://joomla.box/quickbooks/docs/partner_platform/example_app_ipp_v3/success.php';
+$quickbooks_success_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/success.php'; // beta
 
 // This is the menu URL script 
-$quickbooks_menu_url = 'http://joomla.box/quickbooks/docs/partner_platform/example_app_ipp_v3/menu.php';
+$quickbooks_menu_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/menu.php'; // beta
 
 // This is a database connection string that will be used to store the OAuth credentials 
 // $dsn = 'pgsql://username:password@hostname/database';
 // $dsn = 'mysql://username:password@hostname/database';
-$dsn = 'mysqli://root:root@localhost/example_app_ipp_v3';		
+$dsn = 'mysqli://root:mHmzEUsKpRh0@localhost/bitnami_qbo_ipp'; //beta
 
 // You should set this to an encryption key specific to your app
 $encryption_key = 'bcde1234';
