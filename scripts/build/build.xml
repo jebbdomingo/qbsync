@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<project name="Nucleon Plus QBO Sync" default="build">
+
+    <property file="build.properties" />
+
+    <target name="build">
+        <delete dir="tmp" includeemptydirs="true" />
+
+        <copy todir="tmp">
+            <fileset dir="../../code" />
+        </copy>
+
+        <move file="tmp/administrator/components/com_qbsync/qbsync.xml" tofile="tmp/qbsync.xml" overwrite="true" />
+        <copy todir="tmp/resources/install">
+            <fileset dir="tmp/administrator/components/com_qbsync/resources/install/" />
+        </copy>
+
+        <!-- take out source mapping from CSS files -->
+        <reflexive>
+            <fileset dir="tmp/media/com_qbsync/css">
+                <include name="*.css" />
+            </fileset>
+            <fileset dir="tmp/extensions/comments/resources/assets/css">
+                <include name="*.css" />
+            </fileset>
+            <fileset dir="tmp/extensions/ckeditor/resources/assets/css">
+                <include name="*.css" />
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="\/\*# sourceMappingURL.*?\*\/" replace="" ignoreCase="true"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+
+        <!-- delete SCSS map files -->
+        <delete>
+            <fileset dir="tmp/extensions/comments/resources/assets/css">
+                <include name="*.map" />
+            </fileset>
+            <fileset dir="tmp/extensions/ckeditor/resources/assets/css">
+                <include name="*.map" />
+            </fileset>
+        </delete>
+
+        <delete file="com_qbsync.zip" quiet="true" />
+        <zip destfile="com_qbsync.zip" basedir="tmp" />
+
+        <delete dir="tmp" includeemptydirs="true" />
+    </target>
+</project>
