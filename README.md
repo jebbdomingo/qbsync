@@ -1,2 +1,2 @@
 # qbsync
-Nucleon Plus QuickBooks Integration
+Nucleon Plus QuickBooks Online Integration
