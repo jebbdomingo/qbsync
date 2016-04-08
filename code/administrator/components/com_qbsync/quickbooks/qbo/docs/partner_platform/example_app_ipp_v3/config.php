@@ -36,18 +36,22 @@ $sandbox = true;     // When you're using development tokens
 //$sandbox = false;    // When you're using production tokens
 
 // This is the URL of your OAuth auth handler page
-$quickbooks_oauth_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/oauth.php'; // beta
+//$quickbooks_oauth_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/oauth.php'; // beta
+$quickbooks_oauth_url = 'http://joomla.box/nucleonplus/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/oauth.php'; // beta
 
 // This is the URL to forward the user to after they have connected to IPP/IDS via OAuth
-$quickbooks_success_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/success.php'; // beta
+//$quickbooks_success_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/success.php'; // beta
+$quickbooks_success_url = 'http://joomla.box/nucleonplus/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/success.php'; // beta
 
 // This is the menu URL script 
-$quickbooks_menu_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/menu.php'; // beta
+//$quickbooks_menu_url = 'http://beta.nucleonplus.com/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/menu.php'; // beta
+$quickbooks_menu_url = 'http://http://joomla.box/nucleonplus/administrator/components/com_qbsync/quickbooks/qbo/docs/partner_platform/example_app_ipp_v3/menu.php'; // beta
 
 // This is a database connection string that will be used to store the OAuth credentials 
 // $dsn = 'pgsql://username:password@hostname/database';
 // $dsn = 'mysql://username:password@hostname/database';
-$dsn = 'mysqli://root:mHmzEUsKpRh0@localhost/bitnami_qbo_ipp'; //beta
+//$dsn = 'mysqli://root:mHmzEUsKpRh0@localhost/bitnami_qbo_ipp'; //beta
+$dsn = 'mysqli://root:root@localhost/example_app_ipp_v3'; //beta
 
 // You should set this to an encryption key specific to your app
 $encryption_key = 'bcde1234';

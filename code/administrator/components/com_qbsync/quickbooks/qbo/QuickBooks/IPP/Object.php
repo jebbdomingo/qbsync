@@ -355,6 +355,8 @@ class QuickBooks_IPP_Object
 		$data = $this->_data;
 		$data = $this->_reorder($data);
 
+		//var_dump($data);die('test');
+
 		$xml = str_repeat("\t", $indent) . '<' . $this->resource() . ' xmlns="http://schema.intuit.com/finance/v3">' . QUICKBOOKS_CRLF;
 		
 		// Go through the data, creating XML out of it

@@ -16,42 +16,32 @@ defined('KOOWA') or die; ?>
 <ktml:style src="media://com_qbsync/css/bootstrap.css" />
 
 <ktml:module position="toolbar">
-    <ktml:toolbar type="actionbar" title="<?= ($salesreceipt->id) ? 'Sales Receipt #' . $salesreceipt->id : 'New Sales Receipt'; ?>" icon="task-add icon-book">
+    <ktml:toolbar type="actionbar" title="<?= ($deposit->id) ? 'Deposit #' . $deposit->id : 'New Deposit'; ?>" icon="task-add icon-book">
 </ktml:module>
 
 <form method="post" class="-koowa-form">
 
     <div class="panel panel-default">
+
         <div class="panel-heading">
-            <h3 class="panel-title"><?= translate('Sales Receipt Details'); ?></h3>
+            <h3 class="panel-title"><?= translate('Deposit Details'); ?></h3>
         </div>
+
         <table class="table">
             <tbody>
                 <tr>
-                    <td><label><strong><?= translate('QBO ID') ?></strong></label></td>
-                    <td><input type="text" name="qbo_salesreceipt_id" value="<?= $salesreceipt->qbo_salesreceipt_id ?>" /></td>
-                </tr>
-                <tr>
                     <td><label><strong><?= translate('Deposit To Account Ref.') ?></strong></label></td>
-                    <td><input type="text" name="DepositToAccountRef" value="<?= $salesreceipt->DepositToAccountRef ?>" /></td>
-                </tr>
-                <tr>
-                    <td><label><strong><?= translate('Doc Number') ?></strong></label></td>
-                    <td><input type="text" name="DocNumber" value="<?= $salesreceipt->DocNumber ?>" /></td>
-                </tr>
-                <tr>
-                    <td><label><strong><?= translate('Customer Ref') ?></strong></label></td>
-                    <td><input type="text" name="CustomerRef" value="<?= $salesreceipt->CustomerRef ?>" /></td>
+                    <td><input type="text" name="DepositToAccountRef" value="<?= ($deposit->DepositToAccountRef) ? $deposit->DepositToAccountRef : $DepositToAccountRef ?>" /></td>
                 </tr>
                 <tr>
                     <td><label><strong><?= translate('Department Ref') ?></strong></label></td>
-                    <td><input type="text" name="DepartmentRef" value="<?= $salesreceipt->DepartmentRef ?>" /></td>
+                    <td><input type="text" name="DepartmentRef" value="<?= ($deposit->DepartmentRef) ? $deposit->DepartmentRef : $DepartmentRef ?>" /></td>
                 </tr>
                 <tr>
                     <td><label><strong><?= translate('Date') ?></strong></label></td>
                     <td>
-                        <?= helper('date.humanize', array('date' => $salesreceipt->TxnDate)) ?>
-                        <?= helper('date.format', array('date' => $salesreceipt->TxnDate)) ?>
+                        <?= helper('date.humanize', array('date' => $deposit->TxnDate)) ?>
+                        <?= helper('date.format', array('date' => $deposit->TxnDate)) ?>
                     </td>
                 </tr>
                 <tr>
@@ -59,12 +49,25 @@ defined('KOOWA') or die; ?>
                     <td>
                         <?= helper('listbox.sync', array(
                             'name'     => 'synced',
-                            'selected' => $salesreceipt->synced,
+                            'selected' => $deposit->synced,
+                            'attribs'   => array(
+                                'disabled' => ($deposit->id) ? false : true
+                            )
                         )) ?>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+    </div>
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= translate('Sales Receipts'); ?></h3>
+        </div>
+
+        <?= import('sales_receipts.html', ['sales_receipts' => $sales_receipts]) ?>
     </div>
 
 </form>

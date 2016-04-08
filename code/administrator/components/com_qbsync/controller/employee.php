@@ -9,6 +9,6 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComQbsyncControllerTransfer extends ComQbsyncControllerAbstract
+class ComQbsyncControllerEmployee extends ComQbsyncControllerAbstract
 {
 }

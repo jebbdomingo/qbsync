@@ -19,12 +19,14 @@
                 <?= $salesreceipt->id ?>
             </a>
         </td>
+        <td><?= $salesreceipt->qbo_salesreceipt_id ?>
         <td>
             <span class="label <?= ($salesreceipt->synced == 'no') ? 'label-default' : 'label-info' ?>"><?= ucwords(escape(($salesreceipt->synced == 'no') ? 'No' : 'Yes')) ?></span>
         </td>
         <td><?= $salesreceipt->DepositToAccountRef ?></td>
         <td><?= $salesreceipt->DocNumber ?></td>
         <td><?= $salesreceipt->CustomerRef ?></td>
+        <td><?= $salesreceipt->DepartmentRef ?></td>
         <td>
             <?= helper('date.format', array('date' => $salesreceipt->TxnDate)) ?>
         </td>

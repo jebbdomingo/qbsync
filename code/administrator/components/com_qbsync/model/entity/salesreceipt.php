@@ -44,10 +44,6 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $SalesReceipt->setCustomerRef($this->CustomerRef);
         }
 
-        if ($this->DepartmentRef) {
-            $SalesReceipt->setDepartmentRef($this->DepartmentRef);
-        }
-
         foreach ($this->getLineItems() as $line)
         {
             $Line = new QuickBooks_IPP_Object_Line();
@@ -68,10 +64,11 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
 
         if ($resp = $SalesReceiptService->add($this->Context, $this->realm, $SalesReceipt))
         {
-            $this->synced = 'yes';
+            $this->synced              = 'yes';
+            $this->qbo_salesreceipt_id = QuickBooks_IPP_IDS::usableIDType($resp);
             $this->save();
 
-            $this->_syncTransfers();
+            //$this->_syncTransfers();
 
             return true;
         }
@@ -85,7 +82,7 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
      *
      * @return boolean
      */
-    protected function _syncTransfers()
+    /*protected function _syncTransfers()
     {
         $transfers = $this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch();
 
@@ -97,7 +94,7 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
                 return false;
             }
         }
-    }
+    }*/
 
     /**
      * Delete

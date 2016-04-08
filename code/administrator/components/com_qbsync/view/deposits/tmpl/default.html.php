@@ -21,7 +21,7 @@ defined('KOOWA') or die; ?>
 </ktml:module>
 
 <ktml:module position="toolbar">
-    <ktml:toolbar type="actionbar" title="COM_QBSYNC_SUBMENU_SALESRECEIPTS" icon="task icon-stack">
+    <ktml:toolbar type="actionbar" title="COM_QBSYNC_SUBMENU_DEPOSITS" icon="task icon-stack">
 </ktml:module>
 
 <div class="nucleonplus-container">
@@ -30,9 +30,6 @@ defined('KOOWA') or die; ?>
             <div class="scopebar">
                 <div class="scopebar-group last hidden-tablet hidden-phone">
                     <?= helper('listbox.filterList', array('active_status' => parameters()->synced)); ?>
-                </div>
-                <div class="scopebar-search">
-                    <?= helper('grid.search', array('submit_on_clear' => true, 'placeholder' => 'Doc Number')) ?>
                 </div>
             </div>
             <div class="nucleonplus_table_container">
@@ -46,19 +43,10 @@ defined('KOOWA') or die; ?>
                                 <?= helper('grid.sort', array('column' => 'id', 'title' => 'ID')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'qbo_salesreceipt_id', 'title' => 'QBO ID')); ?>
-                            </th>
-                            <th>
                                 <?= helper('grid.sort', array('column' => 'synced', 'title' => 'Synced')); ?>
                             </th>
                             <th>
                                 <?= helper('grid.sort', array('column' => 'DepositToAccountRef', 'title' => 'Deposit To Account Ref.')); ?>
-                            </th>
-                            <th>
-                                <?= helper('grid.sort', array('column' => 'DocNumber', 'title' => 'Doc Number')); ?>
-                            </th>
-                            <th>
-                                <?= helper('grid.sort', array('column' => 'CustomerRef', 'title' => 'Customer Ref')); ?>
                             </th>
                             <th>
                                 <?= helper('grid.sort', array('column' => 'DepartmentRef', 'title' => 'Department Ref')); ?>
@@ -69,11 +57,11 @@ defined('KOOWA') or die; ?>
                         </tr>
                     </thead>
                     <tbody>
-                        <? if (count($salesreceipts)): ?>
-                            <?= import('default_salesreceipts.html', ['salesreceipts' => $salesreceipts]) ?>
+                        <? if (count($deposits)): ?>
+                            <?= import('default_deposits.html', ['deposits' => $deposits]) ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="9" align="center" style="text-align: center;">
+                                <td colspan="6" align="center" style="text-align: center;">
                                     <?= translate('No record(s) found.') ?>
                                 </td>
                             </tr>
@@ -81,7 +69,7 @@ defined('KOOWA') or die; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="9">
+                            <td colspan="6">
                                 <?= helper('paginator.pagination') ?>
                             </td>
                         </tr>
