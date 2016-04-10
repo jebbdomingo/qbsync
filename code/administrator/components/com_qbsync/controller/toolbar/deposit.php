@@ -44,7 +44,7 @@ class ComQbsyncControllerToolbarDeposit extends ComKoowaControllerToolbarActionb
         }
 
         // Sync command
-        if ($canSave)
+        if ($context->result->id && $context->result->synced === 'no' && $canSave)
         {
             $this->addCommand('sync', array(
                 'allowed' => $allowed,

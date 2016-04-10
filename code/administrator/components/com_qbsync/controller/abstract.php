@@ -37,11 +37,15 @@ class ComQbsyncControllerAbstract extends ComKoowaControllerModel
                 {
                     $error = $entity->getStatusMessage();
                     $context->response->addMessage($error ? $error : 'Sync Action Failed', 'error');
+
+                    return $entities;
                 }
                 else $context->response->setStatus(KHttpResponse::NO_CONTENT);
             }
         }
         else throw new KControllerExceptionResourceNotFound('Resource Not Found');
+
+        $context->response->addMessage('Transaction(s) has been synced');
 
         return $entities;
     }

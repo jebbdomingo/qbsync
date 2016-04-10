@@ -51,7 +51,7 @@ class ComQbsyncModelEntityEmployee extends ComQbsyncQuickbooksModelEntityRow
                 $this->save();
                 return true;
             }
-            else $this->setStatusMessage($EmployeeService->lastError($this->Context));
+            else $this->setStatusMessage('Employee Sync Error: ' . $EmployeeService->lastError($this->Context));
         }
 
         return false;
@@ -67,6 +67,7 @@ class ComQbsyncModelEntityEmployee extends ComQbsyncQuickbooksModelEntityRow
     protected function _buildEmployee($Employee)
     {
         $Employee->setDisplayName($this->DisplayName);
+        $Customer->setPrintOnCheckName($this->PrintOnCheckName);
 
         // Phone #
         $PrimaryPhone = new QuickBooks_IPP_Object_PrimaryPhone();

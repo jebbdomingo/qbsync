@@ -68,33 +68,12 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $this->qbo_salesreceipt_id = QuickBooks_IPP_IDS::usableIDType($resp);
             $this->save();
 
-            //$this->_syncTransfers();
-
             return true;
         }
-        else $this->setStatusMessage($SalesReceiptService->lastError($this->Context));
+        else $this->setStatusMessage('SalesReceipt Sync Error: ' . $SalesReceiptService->lastError($this->Context));
 
         return false;
     }
-
-    /**
-     * Sync releated account funds transfers
-     *
-     * @return boolean
-     */
-    /*protected function _syncTransfers()
-    {
-        $transfers = $this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch();
-
-        foreach ($this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch() as $transfer)
-        {
-            if (!$transfer->sync())
-            {
-                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$this->DocNumber}");
-                return false;
-            }
-        }
-    }*/
 
     /**
      * Delete

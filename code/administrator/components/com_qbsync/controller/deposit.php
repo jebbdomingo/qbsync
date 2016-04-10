@@ -96,14 +96,20 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
             {
                 $entity->setProperties($context->request->data->toArray());
 
-                $salesreceipts = $this->getObject('com:qbsync.model.salesreceipts')->deposit_id($entity->id)->fetch();
+                $salesreceipts = $this->getObject('com:qbsync.model.salesreceipts')
+                    ->deposit_id($entity->id)
+                    ->synced('no')
+                    ->fetch()
+                ;
+                
                 foreach ($salesreceipts as $salesreceipt)
                 {
                     if ($salesreceipt->sync() === false)
                     {
                         $error = $salesreceipt->getStatusMessage();
                         $context->response->addMessage($error ? $error : 'SalesReceipt Sync Action Failed', 'error');
-                        break(2);
+                        
+                        return $entities;
                     }
                 }
 
@@ -111,11 +117,15 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
                 {
                     $error = $entity->getStatusMessage();
                     $context->response->addMessage($error ? $error : 'Sync Action Failed', 'error');
+
+                    return $entities;
                 }
                 else $context->response->setStatus(KHttpResponse::NO_CONTENT);
             }
         }
         else throw new KControllerExceptionResourceNotFound('Resource Not Found');
+
+        $context->response->addMessage("Deposit transaction(s) has been synced");
 
         return $entities;
     }

@@ -49,7 +49,7 @@ class ComQbsyncModelEntityCustomer extends ComQbsyncQuickbooksModelEntityRow
                 $this->save();
                 return true;
             }
-            else $this->setStatusMessage($CustomerService->lastError($this->Context));
+            else $this->setStatusMessage('Customer Sync Error: ' . $CustomerService->lastError($this->Context));
         }
 
         return false;
@@ -65,6 +65,7 @@ class ComQbsyncModelEntityCustomer extends ComQbsyncQuickbooksModelEntityRow
     protected function _buildCustomer($Customer)
     {
         $Customer->setDisplayName($this->DisplayName);
+        $Customer->setPrintOnCheckName($this->PrintOnCheckName);
 
         // Phone #
         $PrimaryPhone = new QuickBooks_IPP_Object_PrimaryPhone();

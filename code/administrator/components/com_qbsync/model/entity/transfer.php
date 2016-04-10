@@ -29,7 +29,7 @@ class ComQbsyncModelEntityTransfer extends ComQbsyncQuickbooksModelEntityRow
         $Transfer->setFromAccountRef($this->FromAccountRef);
         $Transfer->setToAccountRef($this->ToAccountRef);
         $Transfer->setAmount($this->Amount);
-        $Transfer->setPrivateNote($this->PrivateNote);
+        $Transfer->setPrivateNote("NUC-TRN-{$this->PrivateNote}");
 
         $TransferService = new QuickBooks_IPP_Service_Transfer();
 
@@ -40,7 +40,7 @@ class ComQbsyncModelEntityTransfer extends ComQbsyncQuickbooksModelEntityRow
 
             return true;
         }
-        else $this->setStatusMessage($TransferService->lastError($this->Context));
+        else $this->setStatusMessage('Transfer Sync Error: ' . $TransferService->lastError($this->Context));
 
         return false;
     }

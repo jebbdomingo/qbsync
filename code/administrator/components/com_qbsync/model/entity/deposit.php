@@ -40,12 +40,15 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         $Deposit->setDepositToAccountRef($this->DepositToAccountRef);
         $Deposit->setDepartmentRef($this->DepartmentRef);
         $Deposit->setTxnDate($this->TxnDate);
+
+        $order_ids = array();
         
         foreach ($this->getLineItems() as $line)
         {
+            $order_ids[] = $line->DocNumber;
+
             $Line = new QuickBooks_IPP_Object_Line();
             $Line->setDetailType('LinkedTxn');
-            //$Line->setAmount($line->Amount);
             
             $Details = new QuickBooks_IPP_Object_LinkedTxn();
             $Details->setTxnId($line->qbo_salesreceipt_id); // Sales Receipt ID in QBO
@@ -54,29 +57,22 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
 
             $Line->addLinkedTxn($Details);
 
-            /*$txn = new stdClass;
-            $txn->TxnId   = $line->qbo_salesreceipt_id; // Sales Receipt ID in QBO
-            $txn->TxnType = 'SalesReceipt';
-            $txn->TxnLineId = 0;
-            $Line->addLinkedTxn($txn);*/
-
             $Deposit->addLine($Line);
         }
-
-        //var_dump($Deposit);die('test');
 
         $DepositService = new QuickBooks_IPP_Service_Deposit();
 
         if ($resp = $DepositService->add($this->Context, $this->realm, $Deposit))
         {
-            $this->synced = 'yes';
-            $this->save();
+            if ($this->_syncTransfers($order_ids))
+            {
+                $this->synced = 'yes';
+                $this->save();
+            }
+            else return false;
 
-            //$this->_syncTransfers();
-
-            return true;
         }
-        else $this->setStatusMessage($DepositService->lastError($this->Context));
+        else $this->setStatusMessage('Deposit Sync Error: ' . $DepositService->lastError($this->Context));
 
         return false;
     }
@@ -84,19 +80,25 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
     /**
      * Sync releated account funds transfers
      *
+     * @param array $order_ids
+     *
      * @return boolean
      */
-    /*protected function _syncTransfers()
+    protected function _syncTransfers(array $order_ids)
     {
-        $transfers = $this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch();
+        //$order_ids = implode(',', $order_ids);
+        $transfers = $this->getObject('com:qbsync.model.transfers')->order_ids($order_ids)->fetch();
 
-        foreach ($this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch() as $transfer)
+        foreach ($transfers as $transfer)
         {
             if (!$transfer->sync())
             {
-                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$this->DocNumber}");
+                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->order_id}");
+
                 return false;
             }
         }
-    }*/
+
+        return true;
+    }
 }
