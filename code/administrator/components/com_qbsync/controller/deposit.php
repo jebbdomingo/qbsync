@@ -96,6 +96,7 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
             {
                 $entity->setProperties($context->request->data->toArray());
 
+                // Sync SalesReceipts added to this Deposit that are currently unsynced
                 $salesreceipts = $this->getObject('com:qbsync.model.salesreceipts')
                     ->deposit_id($entity->id)
                     ->synced('no')
@@ -109,16 +110,17 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
                         $error = $salesreceipt->getStatusMessage();
                         $context->response->addMessage($error ? $error : 'SalesReceipt Sync Action Failed', 'error');
                         
-                        return $entities;
+                        break(2);
                     }
                 }
 
+                // Sync this Deposit
                 if ($entity->sync() === false)
                 {
                     $error = $entity->getStatusMessage();
-                    $context->response->addMessage($error ? $error : 'Sync Action Failed', 'error');
+                    $context->response->addMessage($error ? $error : 'Deposit Sync Action Failed', 'error');
 
-                    return $entities;
+                    break;
                 }
                 else $context->response->setStatus(KHttpResponse::NO_CONTENT);
             }

@@ -57,7 +57,6 @@ class ComQbsyncViewDepositHtml extends ComKoowaViewHtml
         $model   = $this->getModel();
         $deposit = $model->fetch();
 
-
         if ($deposit->id)
         {
             $sales_receipts = $this->getObject('com:qbsync.model.salesreceipts')
@@ -68,7 +67,6 @@ class ComQbsyncViewDepositHtml extends ComKoowaViewHtml
         else
         {
             $sales_receipts = $this->getObject('com:qbsync.model.salesreceipts')
-                ->synced('no')
                 ->deposit_id(0)
                 ->fetch()
             ;
