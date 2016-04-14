@@ -17,7 +17,14 @@ class ComQbsyncControllerPermissionCustomer extends ComKoowaControllerPermission
      */
     public function canAdd()
     {
+        $data    = $this->getMixer()->getContext()->request->data;
+        $account = $this->getMixer()->getObject('com:nucleonplus.model.accounts')->id($data->account_id)->fetch();
+
         if ($this->getObject('user')->isAuthentic()) {
+            return true;
+        } elseif ($account->id) {
+            // Allow to add even the actor isn't authenticated as long as there's existing member account
+            // Primarily used in Joomla user activation 
             return true;
         } else {
             return parent::canAdd();
