@@ -46,6 +46,8 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
 
         foreach ($this->getLineItems() as $line)
         {
+            // TODO check item quantity from inventory here
+
             $Line = new QuickBooks_IPP_Object_Line();
             $Line->setDetailType('SalesItemLineDetail');
             $Line->setDescription($line->Description);

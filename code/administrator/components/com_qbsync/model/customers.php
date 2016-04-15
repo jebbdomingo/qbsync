@@ -16,6 +16,8 @@ class ComQbsyncModelCustomers extends KModelDatabase
 
         $this->getState()
             ->insert('synced', 'string')
+            ->insert('account_id', 'int')
+            ->insert('action', 'string')
         ;
     }
 
@@ -38,6 +40,14 @@ class ComQbsyncModelCustomers extends KModelDatabase
 
         if (!is_null($state->synced) && $state->synced <> 'all') {
             $query->where('tbl.synced = :synced')->bind(['synced' => $state->synced]);
+        }
+
+        if ($state->account_id) {
+            $query->where('tbl.account_id = :account_id')->bind(['account_id' => $state->account_id]);
+        }
+
+        if ($state->action) {
+            $query->where('tbl.action = :action')->bind(['action' => $state->action]);
         }
     }
 }
