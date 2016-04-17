@@ -70,11 +70,37 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $this->qbo_salesreceipt_id = QuickBooks_IPP_IDS::usableIDType($resp);
             $this->save();
 
+            // Sync items to get updated quantity
+            $this->_syncItems();
+
             return true;
         }
         else $this->setStatusMessage('SalesReceipt Sync Error: ' . $SalesReceiptService->lastError($this->Context));
 
         return false;
+    }
+
+    /**
+     * Sync items
+     *
+     * @throws Exception
+     *
+     * @return boolean
+     */
+    protected function _syncItems()
+    {
+        $items = $this->getObject('com:qbsync.model.items')->fetch();
+
+        foreach ($items as $item)
+        {
+            if ($item->sync() === false)
+            {
+                $error = $item->getStatusMessage();
+                throw new Exception($error ? $error : 'Sync Action Failed', 'error');
+            }
+        }
+
+        return true;
     }
 
     /**

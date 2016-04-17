@@ -84,7 +84,7 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
      */
     protected function _actionSync(KControllerContextInterface $context)
     {
-        if(!$context->result instanceof KModelEntityInterface) {
+        if (!$context->result instanceof KModelEntityInterface) {
             $entities = $this->getModel()->fetch();
         } else {
             $entities = $context->result;
@@ -110,7 +110,7 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
                         $error = $salesreceipt->getStatusMessage();
                         $context->response->addMessage($error ? $error : 'SalesReceipt Sync Action Failed', 'error');
                         
-                        break(2);
+                        return $entities;
                     }
                 }
 
@@ -120,7 +120,7 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
                     $error = $entity->getStatusMessage();
                     $context->response->addMessage($error ? $error : 'Deposit Sync Action Failed', 'error');
 
-                    break;
+                    return $entities;
                 }
                 else $context->response->setStatus(KHttpResponse::NO_CONTENT);
             }

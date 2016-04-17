@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Nucleon Plus
  *
@@ -8,34 +7,42 @@
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
-class ComQbsyncModelItems extends ComQbsyncQuickbooksModel
+
+class ComQbsyncModelItems extends KModelDatabase
 {
     public function __construct(KObjectConfig $config)
     {
         parent::__construct($config);
 
         $this->getState()
-            ->insert('id', 'int')
+            ->insert('item_id', 'int')
+            ->insert('ItemRef', 'int')
         ;
     }
 
-    /**
-     *
-     * @param KModelContext $context A model context object
-     * 
-     * @return KModelEntityInterface The entity
-     */
-    protected function _actionFetch(KModelContext $context)
+    protected function _initialize(KObjectConfig $config)
     {
-        // Item
-        $itemService = new QuickBooks_IPP_Service_Term();
+        $config->append(array(
+            'behaviors' => array(
+                'searchable' => array('columns' => array('DocNumber'))
+            )
+        ));
 
-        $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$context->state->id}' ");
+        parent::_initialize($config);
+    }
 
-        if (count($items) == 0) {
-            return null;
+    protected function _buildQueryWhere(KDatabaseQueryInterface $query)
+    {
+        parent::_buildQueryWhere($query);
+
+        $state = $this->getState();
+
+        if ($state->item_id) {
+            $query->where('tbl.item_id = :item_id')->bind(['item_id' => $state->item_id]);
         }
 
-        return $items[0];
+        if ($state->ItemRef) {
+            $query->where('tbl.ItemRef = :ItemRef')->bind(['ItemRef' => $state->ItemRef]);
+        }
     }
 }

@@ -15,9 +15,27 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
      *
      * @return KModelEntityRowset
      */
-    public function getLineItems()
+    public function syncSalesReceipts()
     {
-        return $this->getObject('com:qbsync.model.salesreceipts')->deposit_id($this->id)->fetch();
+        // Sync SalesReceipts added to this Deposit that are currently unsynced
+        $salesreceipts = $this->getObject('com:qbsync.model.salesreceipts')
+            ->deposit_id($this->id)
+            ->synced('no')
+            ->fetch()
+        ;
+        
+        foreach ($salesreceipts as $salesreceipt)
+        {
+            if ($salesreceipt->sync() === false)
+            {
+                $error = $salesreceipt->getStatusMessage();
+                $this->setStatusMessage($error ? $error : 'SalesReceipt Sync Action Failed', 'error');
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -42,8 +60,14 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         $Deposit->setTxnDate($this->TxnDate);
 
         $order_ids = array();
-        
-        foreach ($this->getLineItems() as $line)
+
+        // Sync sales receipts added to this deposit
+        if (!$this->syncSalesReceipts()) {
+            return false;
+        }
+
+        // Add the sales receipts as line items of this deposit
+        foreach ($this->getObject('com:qbsync.model.salesreceipts')->deposit_id($this->id)->fetch() as $line)
         {
             $order_ids[] = $line->DocNumber;
 
@@ -61,20 +85,17 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         }
 
         $DepositService = new QuickBooks_IPP_Service_Deposit();
-
         if ($resp = $DepositService->add($this->Context, $this->realm, $Deposit))
         {
-            if ($this->_syncTransfers($order_ids))
+            if ($this->_syncTransfers($order_ids) === true)
             {
                 $this->synced = 'yes';
                 $this->save();
             }
-            else return false;
-
         }
         else $this->setStatusMessage('Deposit Sync Error: ' . $DepositService->lastError($this->Context));
 
-        return false;
+        return true;
     }
 
     /**
@@ -86,12 +107,11 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
      */
     protected function _syncTransfers(array $order_ids)
     {
-        //$order_ids = implode(',', $order_ids);
         $transfers = $this->getObject('com:qbsync.model.transfers')->order_ids($order_ids)->fetch();
 
         foreach ($transfers as $transfer)
         {
-            if (!$transfer->sync())
+            if ($transfer->sync() === false)
             {
                 $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->order_id}");
 

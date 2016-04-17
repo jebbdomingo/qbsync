@@ -27,7 +27,9 @@ class ComQbsyncControllerAbstract extends ComKoowaControllerModel
             $entities = $context->result;
         }
 
-        if (count($entities))
+        $count = count($entities);
+
+        if ($count)
         {
             foreach($entities as $entity)
             {
@@ -45,7 +47,7 @@ class ComQbsyncControllerAbstract extends ComKoowaControllerModel
         }
         else throw new KControllerExceptionResourceNotFound('Resource Not Found');
 
-        $context->response->addMessage('Transaction(s) has been synced');
+        $context->response->addMessage("{$count} Items(s) has been synced");
 
         return $entities;
     }
