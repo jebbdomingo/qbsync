@@ -37,7 +37,7 @@ class ComQbsyncModelEntityCustomer extends ComQbsyncQuickbooksModelEntityRow
                 $this->save();
                 return true;
             }
-            else $this->setStatusMessage($CustomerService->lastError($this->Context));
+            else $this->setStatusMessage('Customer Add Sync Error: ' . $CustomerService->lastError($this->Context));
         }
         elseif ($this->action == 'update')
         {
@@ -49,7 +49,7 @@ class ComQbsyncModelEntityCustomer extends ComQbsyncQuickbooksModelEntityRow
                 $this->save();
                 return true;
             }
-            else $this->setStatusMessage('Customer Sync Error: ' . $CustomerService->lastError($this->Context));
+            else $this->setStatusMessage('Customer Update Sync Error: ' . $CustomerService->lastError($this->Context));
         }
 
         return false;
