@@ -66,8 +66,9 @@ class ComQbsyncModelEntityEmployee extends ComQbsyncQuickbooksModelEntityRow
      */
     protected function _buildEmployee($Employee)
     {
-        $Employee->setDisplayName($this->DisplayName);
-        $Customer->setPrintOnCheckName($this->PrintOnCheckName);
+        $Employee->setGivenName($this->GivenName);
+        $Employee->setFamilyName($this->FamilyName);
+        $Employee->setPrintOnCheckName($this->PrintOnCheckName);
 
         // Phone #
         $PrimaryPhone = new QuickBooks_IPP_Object_PrimaryPhone();
@@ -86,7 +87,7 @@ class ComQbsyncModelEntityEmployee extends ComQbsyncQuickbooksModelEntityRow
         $PrimaryAddr->setState($this->State);
         $PrimaryAddr->setPostalCode($this->PostalCode);
         $PrimaryAddr->setCountry($this->Country);
-        $Employee->PrimaryAddr($PrimaryAddr);
+        $Employee->setPrimaryAddr($PrimaryAddr);
 
         // Email
         $PrimaryEmailAddr = new QuickBooks_IPP_Object_PrimaryEmailAddr();

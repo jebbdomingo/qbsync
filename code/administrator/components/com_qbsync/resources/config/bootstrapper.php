@@ -16,5 +16,10 @@ return array(
                 'com:nucleonplus.controller.behavior.accountsyncable'
             ),
         ),
+        'com://admin/qbsync.controller.employee' => array(
+            'behaviors' => array(
+                'com:nucleonplus.controller.behavior.employeesyncable'
+            ),
+        ),
     )
 );

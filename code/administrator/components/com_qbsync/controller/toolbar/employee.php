@@ -31,6 +31,31 @@ class ComQbsyncControllerToolbarEmployee extends ComKoowaControllerToolbarAction
         $command->label = 'Sync';
     }
 
+    protected function _afterRead(KControllerContextInterface $context)
+    {
+        parent::_afterRead($context);
+
+        $controller = $this->getController();
+        $canSave    = ($controller->isEditable() && $controller->canSave() && $context->result->synced == 'no');
+        $allowed    = true;
+
+        if (isset($context->result) && $context->result->isLockable() && $context->result->isLocked()) {
+            $allowed = false;
+        }
+
+        if (!$canSave) {
+            $this->removeCommand('apply');
+            $this->removeCommand('save');
+        }
+
+        // Sync command
+        if ($canSave) {
+            $this->addCommand('sync', array(
+                'allowed' => $allowed,
+            ));
+        }
+    }
+
     protected function _afterBrowse(KControllerContextInterface $context)
     {
         parent::_afterBrowse($context);
@@ -42,6 +67,8 @@ class ComQbsyncControllerToolbarEmployee extends ComKoowaControllerToolbarAction
         if (isset($context->result) && $context->result->isLockable() && $context->result->isLocked()) {
             $allowed = false;
         }
+
+        $this->removeCommand('new');
 
         // Sync command
         if ($canSave) {

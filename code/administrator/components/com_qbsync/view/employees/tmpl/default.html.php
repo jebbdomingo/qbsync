@@ -21,7 +21,7 @@ defined('KOOWA') or die; ?>
 </ktml:module>
 
 <ktml:module position="toolbar">
-    <ktml:toolbar type="actionbar" title="COM_QBSYNC_SUBMENU_CUSTOMERS" icon="task icon-stack">
+    <ktml:toolbar type="actionbar" title="COM_QBSYNC_SUBMENU_EMPLOYEES" icon="task icon-stack">
 </ktml:module>
 
 <div class="nucleonplus-container">
@@ -52,22 +52,25 @@ defined('KOOWA') or die; ?>
                                 <?= helper('grid.sort', array('column' => 'synced', 'title' => 'Synced')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'account_id', 'title' => 'Account ID')); ?>
+                                <?= helper('grid.sort', array('column' => 'employee_id', 'title' => 'Employee ID')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'CustomerRef', 'title' => 'Customer Ref.')); ?>
+                                <?= helper('grid.sort', array('column' => 'EmployeeRef', 'title' => 'Employee Ref.')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'DisplayName', 'title' => 'Display Name')); ?>
+                                <?= helper('grid.sort', array('column' => 'GivenName', 'title' => 'Given Name')); ?>
+                            </th>
+                            <th>
+                                <?= helper('grid.sort', array('column' => 'FamilyName', 'title' => 'Family Name')); ?>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <? if (count($customers)): ?>
-                            <?= import('customers.html', ['customers' => $customers]) ?>
+                        <? if (count($employees)): ?>
+                            <?= import('employees.html', ['employees' => $employees]) ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="7" align="center" style="text-align: center;">
+                                <td colspan="8" align="center" style="text-align: center;">
                                     <?= translate('No record(s) found.') ?>
                                 </td>
                             </tr>
@@ -75,7 +78,7 @@ defined('KOOWA') or die; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="7">
+                            <td colspan="8">
                                 <?= helper('paginator.pagination') ?>
                             </td>
                         </tr>
