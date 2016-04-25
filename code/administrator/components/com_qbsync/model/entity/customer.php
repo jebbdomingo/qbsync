@@ -52,6 +52,8 @@ class ComQbsyncModelEntityCustomer extends ComQbsyncQuickbooksModelEntityRow
             else $this->setStatusMessage('Customer Update Sync Error: ' . $CustomerService->lastError($this->Context));
         }
 
+        $this->setStatusMessage('General Sync Error: ' . $CustomerService->lastError($this->Context));
+
         return false;
     }
 
