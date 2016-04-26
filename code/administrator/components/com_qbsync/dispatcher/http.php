@@ -13,7 +13,7 @@ class ComQbsyncDispatcherHttp extends ComKoowaDispatcherHttp
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'controller' => 'salesreceipt'
+            'controller' => 'deposit'
         ));
         
         parent::_initialize($config);
