@@ -26,7 +26,19 @@ DROP TABLE IF EXISTS `#__qbsync_customers`;
 
 -- --------------------------------------------------------
 
+DROP TABLE IF EXISTS `#__qbsync_deposits`;
+
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `#__qbsync_employees`;
+
+-- --------------------------------------------------------
+
 DROP TABLE IF EXISTS `#__qbsync_salesreceiptlines`;
+
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `#__qbsync_items`;
 
 -- --------------------------------------------------------
 

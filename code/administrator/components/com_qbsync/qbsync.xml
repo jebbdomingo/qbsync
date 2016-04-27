@@ -30,12 +30,14 @@
             <menu view="deposits" link="option=com_qbsync&amp;view=deposits">COM_QBSYNC_SUBMENU_DEPOSITS</menu>
             <menu view="salesreceipts" link="option=com_qbsync&amp;view=salesreceipts">COM_QBSYNC_SUBMENU_SALESRECEIPTS</menu>
             <menu view="transfers" link="option=com_qbsync&amp;view=transfers">COM_QBSYNC_SUBMENU_TRANSFERS</menu>
+            <menu view="items" link="option=com_qbsync&amp;view=items">COM_QBSYNC_SUBMENU_ITEMS</menu>
             <menu view="customers" link="option=com_qbsync&amp;view=customers">COM_QBSYNC_SUBMENU_CUSTOMERS</menu>
             <menu view="employees" link="option=com_qbsync&amp;view=employees">COM_QBSYNC_SUBMENU_EMPLOYEES</menu>
         </submenu>
 
         <files folder="administrator/components/com_qbsync">
             <folder>controller</folder>
+            <folder>database</folder>
             <folder>dispatcher</folder>
             <folder>language</folder>
             <folder>model</folder>

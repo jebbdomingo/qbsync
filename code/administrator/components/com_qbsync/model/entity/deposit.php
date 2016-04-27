@@ -12,8 +12,9 @@
 class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
 {
     /**
-     *
-     * @return KModelEntityRowset
+     * Sync unsynced sales receipts
+     * 
+     * @return boolean
      */
     public function syncSalesReceipts()
     {
@@ -61,7 +62,7 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
 
         $order_ids = array();
 
-        // Sync sales receipts added to this deposit
+        // Sync unsynced sales receipts added to this deposit
         if (!$this->syncSalesReceipts()) {
             return false;
         }

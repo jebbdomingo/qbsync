@@ -40,8 +40,10 @@ class ComQbsyncControllerSalesreceipt extends ComQbsyncControllerAbstract
      */
     protected function _initialize(KObjectConfig $config)
     {
+        $data = $this->getObject('com:nucleonplus.accounting.service.data');
+
         $config->append(array(
-            'undeposited_funds_account' => 237,
+            'undeposited_funds_account' => $data->ACCOUNT_UNDEPOSITED_REF,
         ));
 
         parent::_initialize($config);

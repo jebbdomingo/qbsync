@@ -44,4 +44,21 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
     {
         return false;
     }
+
+    /**
+     * Update quantity purchased
+     *
+     * @param integer $qty
+     *
+     * @return self
+     */
+    public function updateQuantityPurchased($qty)
+    {
+        $qtyPurchased = (int) $this->quantity_purchased;
+        $qty          = (int) $qty;
+        
+        $this->quantity_purchased = ($qtyPurchased + $qty);
+
+        return $this;
+    }
 }

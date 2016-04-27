@@ -42,7 +42,7 @@ class ComQbsyncModelItems extends KModelDatabase
         }
 
         if ($state->ItemRef) {
-            $query->where('tbl.ItemRef = :ItemRef')->bind(['ItemRef' => $state->ItemRef]);
+            $query->where('tbl.ItemRef IN :ItemRef')->bind(array('ItemRef' => (array) $state->ItemRef));
         }
     }
 }

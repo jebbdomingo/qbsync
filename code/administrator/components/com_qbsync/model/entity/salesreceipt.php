@@ -44,10 +44,10 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $SalesReceipt->setCustomerRef($this->CustomerRef);
         }
 
+        $items = array();
+
         foreach ($this->getLineItems() as $line)
         {
-            // TODO check item quantity from inventory here
-
             $Line = new QuickBooks_IPP_Object_Line();
             $Line->setDetailType('SalesItemLineDetail');
             $Line->setDescription($line->Description);
@@ -56,6 +56,8 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $Details = new QuickBooks_IPP_Object_SalesItemLineDetail();
             $Details->setItemRef($line->ItemRef);
             $Details->setQty($line->Qty);
+
+            $items[$line->ItemRef] += (int) $line->Qty;
 
             $Line->addSalesItemLineDetail($Details);
 
@@ -71,7 +73,7 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $this->save();
 
             // Sync items to get updated quantity
-            $this->_syncItems();
+            $this->_syncItems($items);
 
             return true;
         }
@@ -83,13 +85,16 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
     /**
      * Sync items
      *
+     * @param integer $qtyPurchased
+     *
      * @throws Exception
      *
      * @return boolean
      */
-    protected function _syncItems()
+    protected function _syncItems($processedItems)
     {
-        $items = $this->getObject('com:qbsync.model.items')->fetch();
+        $ids   = array_keys($processedItems);
+        $items = $this->getObject('com:qbsync.model.items')->ItemRef($ids)->fetch();
 
         foreach ($items as $item)
         {
@@ -98,6 +103,11 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
                 $error = $item->getStatusMessage();
                 throw new Exception($error ? $error : 'Sync Action Failed', 'error');
             }
+
+            // Reduced quantity purchased counter for each sales receipt line items synced
+            // QtyOnHand was updated (reduced) from QBO accordingly as a result of the sync
+            $item->quantity_purchased -= (int) $processedItems[$item->ItemRef];
+            $item->save();
         }
 
         return true;
