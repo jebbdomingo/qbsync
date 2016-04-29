@@ -17,6 +17,8 @@ class ComQbsyncModelEmployees extends KModelDatabase
 
         $this->getState()
             ->insert('synced', 'string')
+            ->insert('employee_id', 'int')
+            ->insert('action', 'string')
         ;
     }
 
@@ -39,6 +41,14 @@ class ComQbsyncModelEmployees extends KModelDatabase
 
         if (!is_null($state->synced) && $state->synced <> 'all') {
             $query->where('tbl.synced = :synced')->bind(['synced' => $state->synced]);
+        }
+
+        if ($state->employee_id) {
+            $query->where('tbl.employee_id = :employee_id')->bind(['employee_id' => $state->employee_id]);
+        }
+
+        if ($state->action) {
+            $query->where('tbl.action = :action')->bind(['action' => $state->action]);
         }
     }
 }

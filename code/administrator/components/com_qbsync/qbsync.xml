@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.0.0" method="upgrade">
+<extension type="component" version="2.5" method="upgrade">
     <identifier>com:qbsync</identifier>
-    <name>COM_QBSYNC</name>
+    <name>com_qbsync</name>
     <author>Jebb Domingo</author>
     <creationDate>January 2016</creationDate>
     <copyright>Copyright (C) 2016 - 2019 Nucleon + Co. (http://www.nucleonplus.com)</copyright>
@@ -23,6 +23,10 @@
             <file driver="mysql" charset="utf8">resources/install/uninstall.sql</file>
         </sql>
     </uninstall>
+
+    <media folder="media">
+        <folder>com_qbsync</folder>
+    </media>
 
     <administration>
         <menu>COM_QBSYNC</menu>
@@ -47,7 +51,6 @@
             <folder>view</folder>
 
             <filename>access.xml</filename>
-            <filename>config.xml</filename>
             <filename>qbsync.php</filename>
         </files>
     </administration>
