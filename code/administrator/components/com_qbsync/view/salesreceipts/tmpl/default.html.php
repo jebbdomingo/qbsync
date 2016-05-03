@@ -30,6 +30,7 @@ defined('KOOWA') or die; ?>
             <div class="scopebar">
                 <div class="scopebar-group last hidden-tablet hidden-phone">
                     <?= helper('listbox.filterList', array('active_status' => parameters()->synced)); ?>
+                    <?= helper('listbox.transactionTypeFilters', array('active_status' => parameters()->transaction_type)); ?>
                 </div>
                 <div class="scopebar-search">
                     <?= helper('grid.search', array('submit_on_clear' => true, 'placeholder' => 'Doc Number')) ?>

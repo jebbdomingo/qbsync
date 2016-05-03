@@ -17,6 +17,7 @@ class ComQbsyncModelSalesreceipts extends KModelDatabase
         $this->getState()
             ->insert('synced', 'string')
             ->insert('deposit_id', 'int')
+            ->insert('transaction_type', 'string')
         ;
     }
 
@@ -43,6 +44,10 @@ class ComQbsyncModelSalesreceipts extends KModelDatabase
 
         if (!is_null($state->deposit_id)) {
             $query->where('tbl.deposit_id = :deposit_id')->bind(['deposit_id' => $state->deposit_id]);
+        }
+
+        if ($state->transaction_type) {
+            $query->where('tbl.transaction_type = :transaction_type')->bind(['transaction_type' => $state->transaction_type]);
         }
     }
 }

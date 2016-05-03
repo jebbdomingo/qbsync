@@ -19,12 +19,17 @@ class ComQbsyncTemplateHelperListbox extends ComKoowaTemplateHelperListbox
     /**
      * @var array
      */
-    protected $_sync_filters = [];
+    protected $_sync_filters = array();
 
     /**
      * @var array
      */
-    protected $_sync = [];
+    protected $_sync = array();
+
+    /**
+     * @var array
+     */
+    protected $_transaction_type_filters = array();
 
     /**
      * Constructor
@@ -35,8 +40,9 @@ class ComQbsyncTemplateHelperListbox extends ComKoowaTemplateHelperListbox
     {
         parent::__construct($config);
 
-        $this->_sync_filters = $config->sync_filters;
-        $this->_sync         = $config->sync;
+        $this->_sync_filters             = $config->sync_filters;
+        $this->_sync                     = $config->sync;
+        $this->_transaction_type_filters = $config->transaction_type_filters;
     }
 
     /**
@@ -60,6 +66,12 @@ class ComQbsyncTemplateHelperListbox extends ComKoowaTemplateHelperListbox
             'sync' => array(
                 array('label' => 'No', 'value' => 'no'),
                 array('label' => 'Yes', 'value' => 'yes')
+            )
+        ))
+        ->append(array(
+            'transaction_type_filters' => array(
+                'offline' => 'Offline',
+                'online'  => 'Online',
             )
         ));
 
@@ -110,6 +122,38 @@ class ComQbsyncTemplateHelperListbox extends ComKoowaTemplateHelperListbox
         {
             $class = ($config['active_status'] == $value) ? 'class="active"' : null;
             $href  = ($config['active_status'] <> $value) ? 'href="' . $this->getTemplate()->route("synced={$value}") . '"' : null;
+            $label = $this->getObject('translator')->translate($label);
+
+            $result .= "<a {$class} {$href}>{$label}</a>";
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generates transaction type filters
+     *
+     * @todo rename to status filter list
+     *
+     * @param array $config [optional]
+     *
+     * @return  string  html
+     */
+    public function transactionTypeFilters(array $config = array())
+    {
+        $types = $this->_transaction_type_filters;
+
+        // Merge with user-defined types
+        if (isset($config['transacton_types']) && $config['transacton_types']) {
+            $types = $types->merge($config['transacton_types']);
+        }
+
+        $result = '';
+
+        foreach ($types as $value => $label)
+        {
+            $class = ($config['active_status'] == $value) ? 'class="active"' : null;
+            $href  = ($config['active_status'] <> $value) ? 'href="' . $this->getTemplate()->route("transaction_type={$value}") . '"' : null;
             $label = $this->getObject('translator')->translate($label);
 
             $result .= "<a {$class} {$href}>{$label}</a>";

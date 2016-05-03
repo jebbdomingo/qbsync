@@ -28,6 +28,8 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
         parent::__construct($config);
 
         $this->_bank_account = $config->bank_account;
+
+        $this->addCommandCallback('before.add', '_validate');
     }
 
     /**
@@ -45,6 +47,37 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Validate creation of deposit
+     *
+     * @param KControllerContextInterface $context
+     *
+     * @throws KControllerExceptionRequestInvalid on vadlidation failure
+     * 
+     * @return void
+     */
+    protected function _validate(KControllerContextInterface $context)
+    {
+        try
+        {
+            $translator = $this->getObject('translator');
+
+            foreach ($context->request->data->salesreceipts as $id)
+            {
+                $salesreceipt = $this->getObject('com:qbsync.model.salesreceipts')->id($id)->fetch();
+
+                if ($salesreceipt->transaction_type == 'online') {
+                    throw new KControllerExceptionRequestInvalid($translator->translate("Insufficient stock of {$item->_item_name}"));
+                }
+            }
+        }
+        catch(Exception $e)
+        {
+            $context->getResponse()->setRedirect($this->getRequest()->getReferrer(), $e->getMessage(), 'error');
+            $context->getResponse()->send();
+        }
     }
 
     /**

@@ -68,6 +68,7 @@ class ComQbsyncViewDepositHtml extends ComKoowaViewHtml
         {
             $sales_receipts = $this->getObject('com:qbsync.model.salesreceipts')
                 ->deposit_id(0)
+                ->transaction_type('offline')
                 ->fetch()
             ;
         }
