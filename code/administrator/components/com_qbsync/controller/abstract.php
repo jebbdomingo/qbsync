@@ -47,7 +47,7 @@ class ComQbsyncControllerAbstract extends ComKoowaControllerModel
         }
         else throw new KControllerExceptionResourceNotFound('Resource Not Found');
 
-        $context->response->addMessage("{$count} Items(s) has been synced");
+        $context->response->addMessage("{$count} Item(s) has been synced");
 
         return $entities;
     }
