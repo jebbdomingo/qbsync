@@ -44,9 +44,11 @@ class ComQbsyncViewDepositHtml extends ComKoowaViewHtml
      */
     protected function _initialize(KObjectConfig $config)
     {
+        $data = $this->getObject('com:nucleonplus.accounting.service.data');
+
         $config->append(array(
-            'bank_account_ref' => 269, // Bank Account
-            'department_ref'   => 3, // Angono EC Valle
+            'bank_account_ref' => $data->ACCOUNT_BANK_REF, // Bank Account
+            'department_ref'   => $data->STORE_ANGONO, // Angono EC Valle
         ));
 
         parent::_initialize($config);
