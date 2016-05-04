@@ -22,6 +22,7 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         $salesreceipts = $this->getObject('com:qbsync.model.salesreceipts')
             ->deposit_id($this->id)
             ->synced('no')
+            ->transaction_type('offline')
             ->fetch()
         ;
         
