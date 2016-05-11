@@ -161,7 +161,8 @@ CREATE TABLE IF NOT EXISTS `#__qbsync_salesreceipts` (
 
 CREATE TABLE IF NOT EXISTS `#__qbsync_transfers` (
   `qbsync_transfer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) NOT NULL,
+  `entity` varchar(255) NOT NULL,
+  `entity_id` int(11) NOT NULL,
   `FromAccountRef` int(11) NOT NULL,
   `ToAccountRef` int(11) NOT NULL,
   `Amount` decimal(10,2) NOT NULL,

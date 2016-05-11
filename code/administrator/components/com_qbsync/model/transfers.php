@@ -16,8 +16,9 @@ class ComQbsyncModelTransfers extends KModelDatabase
 
         $this->getState()
             ->insert('synced', 'string')
-            ->insert('order_id', 'int')
-            ->insert('order_ids', 'string')
+            ->insert('entity', 'string')
+            ->insert('entity_id', 'int')
+            ->insert('entity_ids', 'string')
         ;
     }
 
@@ -42,12 +43,16 @@ class ComQbsyncModelTransfers extends KModelDatabase
             $query->where('tbl.synced = :synced')->bind(['synced' => $state->synced]);
         }
 
-        if ($state->order_id) {
-            $query->where('tbl.order_id = :order_id')->bind(['order_id' => $state->order_id]);
+        if ($state->entity) {
+            $query->where('tbl.entity = :entity')->bind(['entity' => $state->entity]);
         }
 
-        if ($state->order_ids) {
-            $query->where('tbl.order_id IN :order_id')->bind(['order_id' => (array) $state->order_ids]);
+        if ($state->entity_id) {
+            $query->where('tbl.entity_id = :entity_id')->bind(['entity_id' => $state->entity_id]);
+        }
+
+        if ($state->entity_ids) {
+            $query->where('tbl.entity_id IN :entity_id')->bind(['entity_id' => (array) $state->entity_ids]);
         }
     }
 }

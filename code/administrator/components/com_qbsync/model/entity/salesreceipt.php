@@ -90,19 +90,23 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
     /**
      * Sync releated account funds transfers
      *
-     * @param integer $order_id
+     * @param integer $entity_id
      *
      * @return boolean
      */
-    protected function _syncTransfers($order_id)
+    protected function _syncTransfers($entity_id)
     {
-        $transfers = $this->getObject('com:qbsync.model.transfers')->order_id($order_id)->fetch();
+        $transfers = $this->getObject('com:qbsync.model.transfers')
+            ->entity('order')
+            ->entity_id($entity_id)
+            ->fetch()
+        ;
 
         foreach ($transfers as $transfer)
         {
             if ($transfer->sync() === false)
             {
-                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->order_id}");
+                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->entity_id}");
 
                 return false;
             }
@@ -160,9 +164,13 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
         }
 
         // Delete the transfer transactions that are related to the sales receipt
-        $transfers = $this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch();
+        $transfers = $this->getObject('com:qbsync.model.transfers')
+            ->entity('order')
+            ->entity_id($this->DocNumber)
+            ->fetch()
+        ;
 
-        foreach ($this->getObject('com:qbsync.model.transfers')->order_id($this->DocNumber)->fetch() as $transfer)
+        foreach ($transfers as $transfer)
         {
             if (!$transfer->delete())
             {

@@ -61,7 +61,7 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         $Deposit->setDepartmentRef($this->DepartmentRef);
         $Deposit->setTxnDate($this->TxnDate);
 
-        $order_ids = array();
+        $entity_ids = array();
 
         // Sync unsynced sales receipts added to this deposit
         if (!$this->syncSalesReceipts()) {
@@ -71,7 +71,7 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         // Add the sales receipts as line items of this deposit
         foreach ($this->getObject('com:qbsync.model.salesreceipts')->deposit_id($this->id)->fetch() as $line)
         {
-            $order_ids[] = $line->DocNumber;
+            $entity_ids[] = $line->DocNumber;
 
             $Line = new QuickBooks_IPP_Object_Line();
             $Line->setDetailType('LinkedTxn');
@@ -89,7 +89,7 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
         $DepositService = new QuickBooks_IPP_Service_Deposit();
         if ($resp = $DepositService->add($this->Context, $this->realm, $Deposit))
         {
-            if ($this->_syncTransfers($order_ids) === true)
+            if ($this->_syncTransfers($entity_ids) === true)
             {
                 $this->synced = 'yes';
                 $this->save();
@@ -103,19 +103,23 @@ class ComQbsyncModelEntityDeposit extends ComQbsyncQuickbooksModelEntityRow
     /**
      * Sync releated account funds transfers
      *
-     * @param array $order_ids
+     * @param array $entity_ids
      *
      * @return boolean
      */
-    protected function _syncTransfers(array $order_ids)
+    protected function _syncTransfers(array $entity_ids)
     {
-        $transfers = $this->getObject('com:qbsync.model.transfers')->order_ids($order_ids)->fetch();
+        $transfers = $this->getObject('com:qbsync.model.transfers')
+            ->entity('order')
+            ->entity_ids($entity_ids)
+            ->fetch()
+        ;
 
         foreach ($transfers as $transfer)
         {
             if ($transfer->sync() === false)
             {
-                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->order_id}");
+                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->entity_id}");
 
                 return false;
             }

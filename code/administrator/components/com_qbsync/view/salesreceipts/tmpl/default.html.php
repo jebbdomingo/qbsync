@@ -29,7 +29,9 @@ defined('KOOWA') or die; ?>
         <form action="" method="get" class="-koowa-grid">
             <div class="scopebar">
                 <div class="scopebar-group last hidden-tablet hidden-phone">
+                    Sync:
                     <?= helper('listbox.filterList', array('active_status' => parameters()->synced)); ?>
+                    Txn Type:
                     <?= helper('listbox.transactionTypeFilters', array('active_status' => parameters()->transaction_type)); ?>
                 </div>
                 <div class="scopebar-search">
@@ -83,7 +85,7 @@ defined('KOOWA') or die; ?>
                     <tfoot>
                         <tr>
                             <td colspan="9">
-                                <?= helper('paginator.pagination') ?>
+                                <?= helper('paginator.pagination', array('limit' => 10)) ?>
                             </td>
                         </tr>
                     </tfoot>
