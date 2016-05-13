@@ -77,7 +77,7 @@ defined('KOOWA') or die; ?>
                     <tfoot>
                         <tr>
                             <td colspan="10">
-                                <?= helper('paginator.pagination', array('limit' => 10)) ?>
+                                <?= helper('paginator.pagination') ?>
                             </td>
                         </tr>
                     </tfoot>
