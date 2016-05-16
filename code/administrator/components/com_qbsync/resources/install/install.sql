@@ -148,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `#__qbsync_salesreceipts` (
   `TxnDate` datetime NOT NULL,
   `CustomerRef` int(11) NOT NULL,
   `DepartmentRef` int(11) NOT NULL,
+  `transaction_type` varchar(50) NOT NULL,
   `synced` varchar(3) NOT NULL DEFAULT 'no',
   PRIMARY KEY (`qbsync_salesreceipt_id`),
   KEY `name` (`TxnDate`)
