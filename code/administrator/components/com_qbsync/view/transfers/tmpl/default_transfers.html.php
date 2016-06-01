@@ -22,7 +22,8 @@
         <td>
             <span class="label <?= ($transfer->synced == 'no') ? 'label-default' : 'label-info' ?>"><?= ucwords(escape(($transfer->synced == 'no') ? 'No' : 'Yes')) ?></span>
         </td>
-        <td><?= $transfer->order_id ?></td>
+        <td><?= $transfer->entity ?></td>
+        <td><?= $transfer->entity_id ?></td>
         <td><?= $transfer->FromAccountRef ?></td>
         <td><?= $transfer->ToAccountRef ?></td>
         <td><?= $transfer->Amount ?></td>

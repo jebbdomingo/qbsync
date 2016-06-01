@@ -49,7 +49,10 @@ defined('KOOWA') or die; ?>
                                 <?= helper('grid.sort', array('column' => 'synced', 'title' => 'Synced')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'order', 'title' => 'Order #')); ?>
+                                <?= helper('grid.sort', array('column' => 'entity', 'title' => 'Entity')); ?>
+                            </th>
+                            <th>
+                                <?= helper('grid.sort', array('column' => 'entity_id', 'title' => 'Entity ID')); ?>
                             </th>
                             <th data-hide="phone,phablet">
                                 <?= helper('grid.sort', array('column' => 'FromAccountRef', 'title' => 'From Account Ref.')); ?>
