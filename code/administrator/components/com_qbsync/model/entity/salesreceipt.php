@@ -57,7 +57,7 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             $Details->setItemRef($line->ItemRef);
             $Details->setQty($line->Qty);
 
-            $items[$line->ItemRef] += (int) $line->Qty;
+            @$items[$line->ItemRef] += (int) $line->Qty;
 
             $Line->addSalesItemLineDetail($Details);
 
