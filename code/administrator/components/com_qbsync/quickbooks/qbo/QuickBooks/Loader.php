@@ -53,7 +53,7 @@ class QuickBooks_Loader
 		
 		if (QUICKBOOKS_LOADER_REQUIREONCE)
 		{
-			require_once QUICKBOOKS_BASEDIR . $file;
+			include QUICKBOOKS_BASEDIR . $file;
 		}
 		else
 		{
