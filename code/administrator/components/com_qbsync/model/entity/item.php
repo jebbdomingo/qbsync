@@ -20,12 +20,9 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
      */
     public function sync()
     {
-        // $CustomerService = new QuickBooks_IPP_Service_Customer();
-
         $itemService = new QuickBooks_IPP_Service_Term();
         $result      = false;
 
-        // $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$this->ItemRef}' ");
         $Item = $this->_fetchItem($this->ItemRef);
 
         if ($Item !== false)
