@@ -9,7 +9,7 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComQbsyncQuickbooksObject extends KObject
+class ComQbsyncQuickbooksObject extends KModelEntityRow
 {
     /**
      * QuickBooks Context
@@ -81,16 +81,18 @@ class ComQbsyncQuickbooksObject extends KObject
      */
     protected function _initialize(KObjectConfig $config)
     {
+        $data = $this->getObject('com:nucleonplus.accounting.service.data');
+        
         $config->append(array(
-            'consumer_key'      => 'qyprdfgY2z15AAY29sqpYyGOc0OxUh',
-            'consumer_secret'   => 'KOGNeRcZwKwO5TcWpTalbg0CYQoFhbTlfP0NUTFQ',
-            'sandbox'           => true,
-            'oauth_url'         => 'http://joomla.box/quickbooks/docs/partner_platform/example_app_ipp_v3/oauth.php',
-            'oauth_success_url' => 'http://joomla.box/quickbooks/docs/partner_platform/example_app_ipp_v3/success.php',
-            'dsn'               => 'mysqli://root:root@localhost/example_app_ipp_v3',
-            'encryption_key'    => 'bcde1234',
-            'username'          => 'DO_NOT_CHANGE_ME',
-            'tenant'            => 'b7rhbqgvvi',
+            'consumer_key'      => $data->CONFIG_CONSUMER_KEY,
+            'consumer_secret'   => $data->CONFIG_CONSUMER_SECRET,
+            'sandbox'           => $data->CONFIG_SANDBOX,
+            'oauth_url'         => $data->CONFIG_OAUTH_URL,
+            'oauth_success_url' => $data->CONFIG_OAUTH_SUCCESS_URL,
+            'dsn'               => $data->CONFIG_DSN,
+            'encryption_key'    => $data->CONFIG_ENCRYPTION_KEY,
+            'username'          => $data->CONFIG_USERNAME,
+            'tenant'            => $data->CONFIG_TENANT,
         ));
 
         parent::_initialize($config);

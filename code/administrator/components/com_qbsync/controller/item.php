@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Nucleon Plus
  *
@@ -11,4 +10,17 @@
 
 class ComQbsyncControllerItem extends ComQbsyncControllerAbstract
 {
+    protected function _actionSync(KControllerContextInterface $context)
+    {
+        if (!$context->result instanceof KModelEntityInterface) {
+            $entities = $this->getModel()->fetch();
+        } else {
+            $entities = $context->result;
+        }
+
+        $service = $this->getObject('com://admin/qbsync.quickbooks.service');
+        $service->sync();
+
+        return $entities;
+    }
 }

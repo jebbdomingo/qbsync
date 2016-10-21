@@ -35,10 +35,13 @@ defined('KOOWA') or die; ?>
                                 <?= helper('grid.checkall')?>
                             </th>
                             <th class="nucleonplus_table__title_field">
-                                <?= helper('grid.sort', array('column' => 'id', 'title' => 'ID')); ?>
+                                <?= helper('grid.sort', array('column' => 'Name', 'title' => 'Name')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'item_id', 'title' => 'Item ID')); ?>
+                                <?= helper('grid.sort', array('column' => 'Type', 'title' => 'Type')); ?>
+                            </th>
+                            <th>
+                                <?= helper('grid.sort', array('column' => 'Active', 'title' => 'Active')); ?>
                             </th>
                             <th>
                                 <?= helper('grid.sort', array('column' => 'ItemRef', 'title' => 'ItemRef')); ?>
@@ -50,16 +53,16 @@ defined('KOOWA') or die; ?>
                                 <?= helper('grid.sort', array('column' => 'PurchaseCost', 'title' => 'Purchase Cost')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'QtyOnHand', 'title' => 'Quantity on Hand')); ?>
+                                <?= helper('grid.sort', array('column' => 'QtyOnHand', 'title' => 'Qty On Hand')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'quantity_purchased', 'title' => 'Quantity Purchased')); ?>
+                                <?= helper('grid.sort', array('column' => 'quantity_purchased', 'title' => 'Qty Sold')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'last_synced_on', 'title' => 'Last Synced On')); ?>
+                                <?= helper('grid.sort', array('column' => 'last_synced_on', 'title' => 'Synced On')); ?>
                             </th>
                             <th>
-                                <?= helper('grid.sort', array('column' => 'last_synced_by', 'title' => 'Last Synced By')); ?>
+                                <?= helper('grid.sort', array('column' => 'last_synced_by', 'title' => 'Synced By')); ?>
                             </th>
                         </tr>
                     </thead>
@@ -68,7 +71,7 @@ defined('KOOWA') or die; ?>
                             <?= import('default_items.html', ['items' => $items]) ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="10" align="center" style="text-align: center;">
+                                <td colspan="11" align="center" style="text-align: center;">
                                     <?= translate('No record(s) found.') ?>
                                 </td>
                             </tr>
@@ -76,7 +79,7 @@ defined('KOOWA') or die; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="10">
+                            <td colspan="11">
                                 <?= helper('paginator.pagination') ?>
                             </td>
                         </tr>

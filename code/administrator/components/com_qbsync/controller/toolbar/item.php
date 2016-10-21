@@ -24,12 +24,34 @@ class ComQbsyncControllerToolbarItem extends ComKoowaControllerToolbarActionbar
 
         $command->append(array(
             'attribs' => array(
-                'data-action' => 'sync'
+                'data-action'     => 'sync',
+                'data-novalidate' => 'novalidate'
             )
         ));
 
         $command->label = 'Sync';
     }
+
+    // protected function _beforeRender(KControllerContextInterface $context)
+    // {
+    //     parent::_beforeRender($context);
+
+    //     $controller = $this->getController();
+    //     $canSave    = ($controller->isEditable() && $controller->canSave());
+    //     $allowed    = true;
+
+    //     if (isset($context->result) && $context->result->isLockable() && $context->result->isLocked()) {
+    //         $allowed = false;
+    //     }
+
+    //     // Sync command
+    //     if ($canSave)
+    //     {
+    //         $this->addCommand('sync', array(
+    //             'allowed' => $allowed,
+    //         ));
+    //     }
+    // }
 
     protected function _afterBrowse(KControllerContextInterface $context)
     {
