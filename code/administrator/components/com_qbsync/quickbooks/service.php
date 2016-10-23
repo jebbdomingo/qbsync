@@ -60,7 +60,8 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                     // Grouped items
                     if ($numLines > 0)
                     {
-                        $bundlePrice = 0;
+                        $bundlePrice  = 0;
+                        $bundleWeight = 0;
 
                         // Reset nucleon item group
                         $groupItems = $qbSyncItemGroupModel->parent_id($qbSyncItem->ItemRef)->fetch();
@@ -72,12 +73,13 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                         {
                             $Line = $Item->getItemGroupDetail()->getItemGroupLine($i);
 
-                            // Compute bundle price
+                            // Compute bundle price and weight
                             $subItem = $qbSyncItemModel
                                 ->ItemRef(QuickBooks_IPP_IDS::usableIDType($Line->getItemRef()))
                                 ->fetch()
                             ;
-                            $bundlePrice += (float) $subItem->UnitPrice * (int) $Line->getQty();
+                            $bundlePrice  += (float) $subItem->UnitPrice * (int) $Line->getQty();
+                            $bundleWeight += (int) $subItem->weight * (int) $Line->getQty();
 
                             // Create nucleon group item
                             $data = array(
@@ -90,6 +92,7 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                         }
 
                         $qbSyncItem->UnitPrice = $bundlePrice;
+                        $qbSyncItem->weight    = $bundleWeight;
                     }
                 }
 

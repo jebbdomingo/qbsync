@@ -11,6 +11,14 @@
 
 class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 {
+    const TYPE_GROUP          = 'Group';
+    const TYPE_INVENTORY_ITEM = 'Inventory';
+
+    public static $item_types = array(
+        self::TYPE_INVENTORY_ITEM,
+        self::TYPE_GROUP
+    );
+
     /**
      * Sync from QBO
      *
@@ -65,22 +73,6 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 
             $result = true;
         }
-
-        return $result;
-    }
-
-    protected function _fetchItem($ItemRef)
-    {
-        $itemService = new QuickBooks_IPP_Service_Term();
-
-        $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' ");
-
-        if (count($items) == 0)
-        {
-            $this->setStatusMessage("Invalid ItemRef {$this->ItemRef}");
-            $result = false;
-        }
-        else $result = $items[0];
 
         return $result;
     }

@@ -15,7 +15,6 @@ class ComQbsyncModelItems extends KModelDatabase
         parent::__construct($config);
 
         $this->getState()
-            ->insert('item_id', 'int')
             ->insert('ItemRef', 'int')
         ;
     }
@@ -36,10 +35,6 @@ class ComQbsyncModelItems extends KModelDatabase
         parent::_buildQueryWhere($query);
 
         $state = $this->getState();
-
-        if ($state->item_id) {
-            $query->where('tbl.item_id = :item_id')->bind(['item_id' => $state->item_id]);
-        }
 
         if ($state->ItemRef) {
             $query->where('tbl.ItemRef IN :ItemRef')->bind(array('ItemRef' => (array) $state->ItemRef));
