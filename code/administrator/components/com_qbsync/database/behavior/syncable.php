@@ -101,7 +101,7 @@ class ComQbsyncDatabaseBehaviorSyncable extends KDatabaseBehaviorAbstract
      * @param KDatabaseContext  $context A database context object
      * @return void
      */
-    protected function _beforeUpdate(KDatabaseContextInterface $context)
+    protected function _beforeSync(KDatabaseContextInterface $context)
     {
         //Get the modified columns
         $modified = $this->getTable()->filter($this->getProperties(true));
