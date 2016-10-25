@@ -49,22 +49,57 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
         foreach ($this->getLineItems() as $line)
         {
             $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setDetailType('SalesItemLineDetail');
             $Line->setDescription($line->Description);
-            $Line->setAmount($line->Amount);
 
-            $Details = new QuickBooks_IPP_Object_SalesItemLineDetail();
-            $Details->setItemRef($line->ItemRef);
-            $Details->setQty($line->Qty);
+            if ($line->Type == ComQbsyncModelEntityItem::TYPE_GROUP)
+            {
+                $Line->setDetailType('GroupLineDetail');
+                $Line->setAmount(0);
 
-            @$items[$line->ItemRef] += (int) $line->Qty;
+                $Details = new QuickBooks_IPP_Object_GroupLineDetail();
+                $Details->setQuantity($line->Qty);
+                $Details->setGroupItemRef($line->ItemRef);
 
-            $Line->addSalesItemLineDetail($Details);
+                $qbsyncItems = $this->getObject('com://admin/qbsync.model.itemgroups')->parent_id($line->ItemRef)->fetch();
+                foreach ($qbsyncItems as $qbsyncItem)
+                {
+                    $GroupItemLineDetails = new QuickBooks_IPP_Object_SalesItemLineDetail();
+                    $GroupItemLineDetails->setGroupItemRef($qbsyncItem->ItemRef);
+                    $GroupItemLineDetails->setQty($qbsyncItem->quantity);
+                    $GroupItemLineDetails->setAmount($qbsyncItem->_item_price);
+
+                    $Details->addLine($GroupItemLineDetails);
+
+                    if ($qbsyncItem->_item_type == ComQbsyncModelEntityItem::TYPE_INVENTORY_ITEM) {
+                        @$items[$qbsyncItem->ItemRef] += (int) $line->Qty * (int) $qbsyncItem->quantity;
+                    }
+                }
+
+                $Line->addGroupLineDetail($Details);
+            }
+            else
+            {
+                $Line->setDetailType('SalesItemLineDetail');
+                $Line->setAmount((float) $line->Amount);
+
+                $Details = new QuickBooks_IPP_Object_SalesItemLineDetail();
+                $Details->setQty($line->Qty);
+                $Details->setItemRef($line->ItemRef);
+                $Line->addSalesItemLineDetail($Details);
+                
+                @$items[$line->ItemRef] += (int) $line->Qty;
+            }
+
 
             $SalesReceipt->addLine($Line);
         }
 
         $SalesReceiptService = new QuickBooks_IPP_Service_SalesReceipt();
+
+        // echo '<pre>' . print_r($SalesReceipt, true) . '</pre>';
+        // echo '<pre>' . print_r((array) $SalesReceipt, true) . '</pre>';
+        // echo '<pre>' . print_r(json_encode((array) $SalesReceipt), true) . '</pre>';
+        // die('test');
 
         if ($resp = $SalesReceiptService->add($this->Context, $this->realm, $SalesReceipt))
         {
