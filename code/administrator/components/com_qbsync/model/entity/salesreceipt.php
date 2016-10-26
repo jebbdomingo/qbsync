@@ -34,11 +34,25 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             return false;
         }
 
+        $order = $this->getObject('com://admin/nucleonplus.model.orders')->id($this->DocNumber)->fetch();
+        if (count($order) == 0) {
+            $this->setStatusMessage("Corresponding Order #{$this->DocNumber} not found");
+            return false;
+        }
+
+        // Create the salesreceipt object
         $SalesReceipt = new QuickBooks_IPP_Object_SalesReceipt();
         $SalesReceipt->setDepositToAccountRef($this->DepositToAccountRef);
         $SalesReceipt->setDepartmentRef($this->DepartmentRef);
         $SalesReceipt->setDocNumber("NUC-SR-{$this->DocNumber}");
         $SalesReceipt->setTxnDate($this->TxnDate);
+
+        // Set shipping address
+        $ShipAddr = new QuickBooks_IPP_Object_ShipAddr();
+        $ShipAddr->setLine1($order->address);
+        $ShipAddr->setLine2($order->city);
+        $ShipAddr->setLine3($order->country);
+        $SalesReceipt->setShipAddr($ShipAddr);
 
         if ($this->CustomerRef > 0) {
             $SalesReceipt->setCustomerRef($this->CustomerRef);
