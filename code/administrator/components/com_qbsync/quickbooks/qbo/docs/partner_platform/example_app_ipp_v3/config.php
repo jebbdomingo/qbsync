@@ -9,7 +9,7 @@
  * @subpackage Documentation
  */
 
-require_once dirname(__FILE__) . '/../../../../data.php';
+require_once dirname(__FILE__) . '/data.php';
 $data = new ComQbsyncQuickbooksData;
         
 // Turn on some error reporting
