@@ -23,7 +23,7 @@ class ComQbsyncModelItems extends KModelDatabase
     {
         $config->append(array(
             'behaviors' => array(
-                'searchable' => array('columns' => array('DocNumber'))
+                'searchable' => array('columns' => array('Name', 'DocNumber'))
             )
         ));
 
