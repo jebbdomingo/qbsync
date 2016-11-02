@@ -29,6 +29,7 @@ class ComQbsyncModelEntityTransfer extends ComQbsyncQuickbooksModelEntityRow
         $Transfer->setFromAccountRef($this->FromAccountRef);
         $Transfer->setToAccountRef($this->ToAccountRef);
         $Transfer->setAmount($this->Amount);
+        $Transfer->setTxnDate($this->TxnDate);
         $Transfer->setPrivateNote("NUC-TRN-{$this->PrivateNote}");
 
         $TransferService = new QuickBooks_IPP_Service_Transfer();
