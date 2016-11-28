@@ -82,6 +82,14 @@ class ComQbsyncQuickbooksModelEntityRow extends KModelEntityRow
     protected function _initialize(KObjectConfig $config)
     {
         $data = $this->getObject('com:nucleonplus.accounting.service.data');
+
+        var_dump($data->CONFIG_CONSUMER_KEY);
+        var_dump($data->CONFIG_CONSUMER_SECRET);
+        var_dump($data->CONFIG_SANDBOX);
+        var_dump($data->CONFIG_OAUTH_URL);
+        var_dump($data->CONFIG_OAUTH_SUCCESS_URL);
+        var_dump($data->CONFIG_DSN);
+        die;
         
         $config->append(array(
             'consumer_key'      => $data->CONFIG_CONSUMER_KEY,
