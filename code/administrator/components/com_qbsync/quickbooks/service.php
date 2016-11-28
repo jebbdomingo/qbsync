@@ -105,10 +105,11 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
     {
         $itemService = new QuickBooks_IPP_Service_Term();
 
-        if (is_null($ItemRef)) {
-            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item");
+        if (is_null($ItemRef))
+        {
+            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory', 'Group')");
         }
-        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}'");
+        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND WHERE Type IN ('Inventory', 'Group')");
 
         if (count($items) == 0)
         {
