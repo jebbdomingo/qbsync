@@ -13,6 +13,7 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 {
     const TYPE_GROUP          = 'Group';
     const TYPE_INVENTORY_ITEM = 'Inventory';
+    const TYPE_SERVICE        = 'Service';
 
     public static $item_types = array(
         self::TYPE_INVENTORY_ITEM,
@@ -99,7 +100,7 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
      */
     public function hasAvailableStock()
     {
-        $result = true;
+        $result = false;
 
         if ($this->Type == 'Group')
         {
@@ -110,23 +111,28 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
             {
                 if ($item->_item_type == self::TYPE_INVENTORY_ITEM)
                 {
-                    $inventoryQty = ((int) $item->_item_qty_onhand - (int) $item->_item_qty_purchased);
-
-                    if ($inventoryQty <= 0)
+                    if (!$this->_checkQuantity($item->_item_qty_onhand, $item->_item_qty_purchased))
                     {
                         $result = false;
                         break;
                     }
+                    else $result = true;
                 }
             }
         }
-        else
-        {
-            $inventoryQty = ((int) $this->QtyOnHand - (int) $this->quantity_purchased);
+        else $result = $this->_checkQuantity($this->QtyOnHand, $this->quantity_purchased);
 
-            if ($inventoryQty <= 0) {
-                $result = false;
-            }
+        return $result;
+    }
+
+    protected function _checkQuantity($onHand, $purchases)
+    {
+        $result = false;
+
+        $inventoryQty = ((int) $onHand - (int) $purchases);
+
+        if ($inventoryQty > 0) {
+            $result = true;
         }
 
         return $result;
