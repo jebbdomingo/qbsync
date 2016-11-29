@@ -17,10 +17,10 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
         $qbSyncItemGroupModel = $this->getObject('com://admin/qbsync.model.itemgroups');
         $Items                = $this->_fetchItem();
 
-        // foreach ($Items as $Item) {
-        //     var_dump($Item);
-        // }
-        // die;
+        foreach ($Items as $Item) {
+            var_dump($Item);
+        }
+        die;
 
         foreach ($Items as $Item)
         {
