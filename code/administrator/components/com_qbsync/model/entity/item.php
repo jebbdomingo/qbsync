@@ -11,11 +11,13 @@
 
 class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 {
-    const TYPE_GROUP          = 'Group';
-    const TYPE_INVENTORY_ITEM = 'Inventory';
+    const TYPE_GROUP              = 'Group';
+    const TYPE_INVENTORY_ITEM     = 'Inventory';
+    const TYPE_NON_INVENTORY_ITEM = 'NonInventory';
 
     public static $item_types = array(
         self::TYPE_INVENTORY_ITEM,
+        self::TYPE_NON_INVENTORY_ITEM,
         self::TYPE_GROUP
     );
 
