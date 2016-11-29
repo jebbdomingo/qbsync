@@ -18,8 +18,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
         $Items                = $this->_fetchItem();
 
         foreach ($Items as $Item) {
-            var_dump($Item->Name);
-            var_dump($Item->Type);
+            var_dump($Item->getId());
+            var_dump($Item->getName());
+            var_dump($Item->getType());
             echo '<br />';
         }
         die;
