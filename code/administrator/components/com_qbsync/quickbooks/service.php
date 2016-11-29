@@ -121,7 +121,19 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
         }
         else
         {
-            $result = is_null($ItemRef) ? $items : $items[0];
+            if (is_null($ItemRef))
+            {
+                $result = array();
+
+                foreach ($items as $item)
+                {
+                    if (strpos($item->getName(), '-') === 0) {
+                        continue;
+                    }
+                    else $result[] = $item;
+                }
+            }
+            else $result = $items[0];
         }
 
         return $result;
