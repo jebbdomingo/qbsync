@@ -28,6 +28,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
             {
                 $qbSyncItem = $qbSyncItemModel->ItemRef(QuickBooks_IPP_IDS::usableIDType($Item->getId()))->fetch();
 
+                var_dump(QuickBooks_IPP_IDS::usableIDType($Item->getId()));
+                var_dump(count($qbSyncItem));die;
+
                 $data = array(
                     'ItemRef'      => QuickBooks_IPP_IDS::usableIDType($Item->getId()),
                     'Name'         => $Item->getName(),
