@@ -18,7 +18,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
         $Items                = $this->_fetchItem();
 
         foreach ($Items as $Item) {
-            var_dump($Item);
+            var_dump($Item->Name);
+            var_dump($Item->Type);
+            echo '<br />';
         }
         die;
 
@@ -107,9 +109,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
 
         if (is_null($ItemRef))
         {
-            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory', 'NonInventory', 'Group')");
+            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory','NonInventory','Group')");
         }
-        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND WHERE Type IN ('Inventory', 'NonInventory', 'Group')");
+        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND WHERE Type IN ('Inventory','NonInventory','Group')");
 
         if (count($items) == 0)
         {
