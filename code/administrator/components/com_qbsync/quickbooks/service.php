@@ -17,13 +17,13 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
         $qbSyncItemGroupModel = $this->getObject('com://admin/qbsync.model.itemgroups');
         $Items                = $this->_fetchItem();
 
-        foreach ($Items as $Item) {
-            var_dump($Item->getId());
-            var_dump($Item->getName());
-            var_dump($Item->getType());
-            echo '<br />';
-        }
-        die;
+        // foreach ($Items as $Item) {
+        //     var_dump($Item->getId());
+        //     var_dump($Item->getName());
+        //     var_dump($Item->getType());
+        //     echo '<br />';
+        // }
+        // die;
 
         foreach ($Items as $Item)
         {
@@ -127,7 +127,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
 
                 foreach ($items as $item)
                 {
-                    if (strpos($item->getName(), '-') === 0) {
+                    if (strpos($item->getName(), '-') === 0)
+                    {
+                        // Remove unused qbo item 
                         continue;
                     }
                     else $result[] = $item;

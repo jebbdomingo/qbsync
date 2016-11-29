@@ -40,7 +40,7 @@ class ComQbsyncModelItems extends KModelDatabase
             $query->where('tbl.ItemRef IN :ItemRef')->bind(array('ItemRef' => (array) $state->ItemRef));
         }
 
-        // Include only the inventory item types
-        $query->where('tbl.Type IN :Type')->bind(array('Type' => (array) ComQbsyncModelEntityItem::$item_types));
+        // Exclude unused qbo items
+        $query->where('tbl.Type NOT LIKE :Type')->bind(array('Type' => '- %');
     }
 }
