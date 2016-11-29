@@ -91,4 +91,44 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 
         return $this;
     }
+
+    /**
+     * Check available stock
+     *
+     * @return boolean
+     */
+    public function hasAvailableStock()
+    {
+        $result = true;
+
+        if ($this->Type == 'Group')
+        {
+            // Query grouped items
+            $items = $this->getObject('com://admin/qbsync.model.itemgroups')->parent_id($this->ItemRef)->fetch();
+
+            foreach ($items as $item)
+            {
+                if ($item->_item_type == self::TYPE_INVENTORY_ITEM)
+                {
+                    $inventoryQty = ((int) $item->_item_qty_onhand - (int) $item->_item_qty_purchased);
+
+                    if ($inventoryQty <= 0)
+                    {
+                        $result = false;
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            $inventoryQty = ((int) $this->QtyOnHand - (int) $this->quantity_purchased);
+
+            if ($inventoryQty <= 0) {
+                $result = false;
+            }
+        }
+
+        return $result;
+    }
 }
