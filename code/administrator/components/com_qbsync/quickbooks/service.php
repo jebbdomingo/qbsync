@@ -110,9 +110,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
 
         if (is_null($ItemRef))
         {
-            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type = 'NonInventory'");
+            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item");
         }
-        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND Type IN ('Inventory','Group')");
+        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}'");
 
         if (count($items) == 0)
         {
