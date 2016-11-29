@@ -28,9 +28,6 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
             {
                 $qbSyncItem = $qbSyncItemModel->ItemRef(QuickBooks_IPP_IDS::usableIDType($Item->getId()))->fetch();
 
-                var_dump(QuickBooks_IPP_IDS::usableIDType($Item->getId()));
-                var_dump(count($qbSyncItem));die;
-
                 $data = array(
                     'ItemRef'      => QuickBooks_IPP_IDS::usableIDType($Item->getId()),
                     'Name'         => $Item->getName(),
@@ -42,6 +39,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                     'QtyOnHand'    => $Item->getQtyOnHand(),
                     'PurchaseCost' => $Item->getPurchaseCost()
                 );
+
+                var_dump($Item->getType());
+                echo '<br />';
 
                 // Create nucleon item
                 if (count($qbSyncItem) == 0)
@@ -102,6 +102,8 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                 $qbSyncItem->save();
             }
         }
+
+        die('test');
     }
 
     protected function _fetchItem($ItemRef = null)
@@ -110,9 +112,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
 
         if (is_null($ItemRef))
         {
-            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item");
+            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory', 'Non-inventory', 'Group')");
         }
-        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}'");
+        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND WHERE Type IN ('Inventory', 'Non-inventory', 'Group')");
 
         if (count($items) == 0)
         {
