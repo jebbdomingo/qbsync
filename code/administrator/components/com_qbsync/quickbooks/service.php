@@ -127,7 +127,7 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
 
                 foreach ($items as $item)
                 {
-                    if (strpos($item->getName(), '-') === 0)
+                    if (stristr($item->getName(), '_NOT_USED_'))
                     {
                         // Remove unused qbo item 
                         continue;

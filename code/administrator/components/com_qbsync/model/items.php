@@ -41,6 +41,6 @@ class ComQbsyncModelItems extends KModelDatabase
         }
 
         // Exclude unused qbo items
-        $query->where("tbl.Type NOT LIKE '- %'");
+        $query->where("tbl.Type NOT LIKE '_NOT_USED_%'");
     }
 }
