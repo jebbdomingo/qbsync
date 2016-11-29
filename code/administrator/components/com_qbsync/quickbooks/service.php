@@ -40,9 +40,6 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                     'PurchaseCost' => $Item->getPurchaseCost()
                 );
 
-                var_dump($Item->getType());
-                echo '<br />';
-
                 // Create nucleon item
                 if (count($qbSyncItem) == 0)
                 {
@@ -102,8 +99,6 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
                 $qbSyncItem->save();
             }
         }
-
-        die('test');
     }
 
     protected function _fetchItem($ItemRef = null)
@@ -112,9 +107,9 @@ class ComQbsyncQuickbooksService extends ComQbsyncQuickbooksObject
 
         if (is_null($ItemRef))
         {
-            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory', 'Non-inventory', 'Group')");
+            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory', 'NonInventory', 'Group')");
         }
-        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND WHERE Type IN ('Inventory', 'Non-inventory', 'Group')");
+        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND WHERE Type IN ('Inventory', 'NonInventory', 'Group')");
 
         if (count($items) == 0)
         {
