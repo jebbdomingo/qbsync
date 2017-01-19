@@ -15,6 +15,9 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
     const TYPE_INVENTORY_ITEM = 'Inventory';
     const TYPE_SERVICE        = 'Service';
 
+    const TYPE_SHIPPING_POST = 'phlpost';
+    const TYPE_SHIPPING_XEND = 'xend';
+
     public static $item_types = array(
         self::TYPE_INVENTORY_ITEM,
         self::TYPE_GROUP
