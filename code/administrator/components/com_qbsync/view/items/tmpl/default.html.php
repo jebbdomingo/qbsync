@@ -58,12 +58,6 @@ defined('KOOWA') or die; ?>
                             <th>
                                 <?= helper('grid.sort', array('column' => 'quantity_purchased', 'title' => 'Qty Sold')); ?>
                             </th>
-                            <th>
-                                <?= helper('grid.sort', array('column' => 'last_synced_on', 'title' => 'Synced On')); ?>
-                            </th>
-                            <th>
-                                <?= helper('grid.sort', array('column' => 'last_synced_by', 'title' => 'Synced By')); ?>
-                            </th>
                         </tr>
                     </thead>
                     <tbody>

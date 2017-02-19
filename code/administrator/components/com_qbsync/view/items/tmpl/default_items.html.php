@@ -14,15 +14,13 @@
         <td style="text-align: center;">
             <?= helper('grid.checkbox', array('entity' => $item)) ?>
         </td>
-        <td class="deskman_table__title_field"><?= $item->Name ?>
-        <td><?= $item->Type ?>
-        <td><?= $item->Active ?>
+        <td class="deskman_table__title_field"><a href="<?= route("view=item&id={$item->id}") ?>"><?= $item->Name ?></a></td>
+        <td><?= $item->Type ?></td>
+        <td><?= $item->Active ?></td>
         <td><?= $item->ItemRef ?></td>
         <td style="text-align: right"><?= number_format($item->UnitPrice, 2) ?></td>
         <td style="text-align: right"><?= number_format($item->PurchaseCost, 2) ?></td>
         <td style="text-align: right"><?= $item->QtyOnHand ?></td>
         <td style="text-align: right"><?= $item->quantity_purchased ?></td>
-        <td><?= helper('date.humanize', array('date' => $item->last_synced_on)) ?></td>
-        <td><?= $item->getInitiator()->getName() ?></td>
     </tr>
 <? endforeach; ?>
