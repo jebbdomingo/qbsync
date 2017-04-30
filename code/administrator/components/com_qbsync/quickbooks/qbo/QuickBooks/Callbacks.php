@@ -584,18 +584,18 @@ class QuickBooks_Callbacks
 	 * 
 	 * 
 	 */
-	static public function callRequestHandler($Driver, &$map, $requestID, $action, $user, $action, $ident, $extra, &$err, $last_action_time, $last_actionident_time, $version = '', $locale = array(), $callback_config = array(), $qbxml = null)
+	static public function callRequestHandler($Driver, &$map, $requestID, $action, $user, $action2, $ident, $extra, &$err, $last_action_time, $last_actionident_time, $version = '', $locale = array(), $callback_config = array(), $qbxml = null)
 	{
-		return QuickBooks_Callbacks::_callRequestOrResponseHandler($Driver, $map, $requestID, $action, 0, $user, $action, $ident, $extra, $err, $last_action_time, $last_actionident_time, $version, $locale, $callback_config, $qbxml);
+		return QuickBooks_Callbacks::_callRequestOrResponseHandler($Driver, $map, $requestID, $action, 0, $user, $action2, $ident, $extra, $err, $last_action_time, $last_actionident_time, $version, $locale, $callback_config, $qbxml);
 	}
 	
 	/**
 	 * 
 	 * 
 	 */
-	static public function callResponseHandler($Driver, &$map, $requestID, $action, $user, $action, $ident, $extra, &$err, $last_action_time, $last_actionident_time, $xml = '', $qb_identifiers = array(), $callback_config = array(), $qbxml = null)
+	static public function callResponseHandler($Driver, &$map, $requestID, $action, $user, $action2, $ident, $extra, &$err, $last_action_time, $last_actionident_time, $xml = '', $qb_identifiers = array(), $callback_config = array(), $qbxml = null)
 	{
-		return QuickBooks_Callbacks::_callRequestOrResponseHandler($Driver, $map, $requestID, $action, 1, $user, $action, $ident, $extra, $err, $last_action_time, $last_actionident_time, $xml, $qb_identifiers, $callback_config, $qbxml);
+		return QuickBooks_Callbacks::_callRequestOrResponseHandler($Driver, $map, $requestID, $action, 1, $user, $action2, $ident, $extra, $err, $last_action_time, $last_actionident_time, $xml, $qb_identifiers, $callback_config, $qbxml);
 	}
 	
 	/**
@@ -603,7 +603,7 @@ class QuickBooks_Callbacks
 	 * 
 	 * @todo Support for object instance callbacks
 	 */
-	static protected function _callRequestOrResponseHandler($Driver, &$map, $requestID, $action, $which, $user, $action, $ident, $extra, &$err, $last_action_time, $last_actionident_time, $xml_or_version = '', $qb_identifier_or_locale = array(), $callback_config = array(), $qbxml = null)
+	static protected function _callRequestOrResponseHandler($Driver, &$map, $requestID, $action, $which, $user, $action2, $ident, $extra, &$err, $last_action_time, $last_actionident_time, $xml_or_version = '', $qb_identifier_or_locale = array(), $callback_config = array(), $qbxml = null)
 	{
 		//print_r($map);
 		//print('action: ' . $action . "\n");

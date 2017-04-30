@@ -1,0 +1,6 @@
+{
+  "packages": [
+    {"title": "Joomlatools Framework", "path": "framework"},
+    {"title": "QB Sync", "path": "qbsync"}
+  ]
+}

@@ -7,20 +7,8 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class com_qbsyncInstallerScript
-{
-    public function preflight($type, $installer)
-    {
-        $return = true;
-        
-        if (!class_exists('Koowa'))
-        {
-            $error = 'This component requires Nooku Framework';
-            $installer->getParent()->abort($error);
+require_once __DIR__.'/helper.php';
 
-            $return = false;
-        }
-        
-        return $return;
-    }
+class com_qbsyncInstallerScript extends JoomlatoolsInstallerHelper
+{
 }

@@ -15,34 +15,6 @@
             <fileset dir="tmp/administrator/components/com_qbsync/resources/install/" />
         </copy>
 
-        <!-- take out source mapping from CSS files -->
-        <reflexive>
-            <fileset dir="tmp/media/com_qbsync/css">
-                <include name="*.css" />
-            </fileset>
-            <fileset dir="tmp/extensions/comments/resources/assets/css">
-                <include name="*.css" />
-            </fileset>
-            <fileset dir="tmp/extensions/ckeditor/resources/assets/css">
-                <include name="*.css" />
-            </fileset>
-            <filterchain>
-                <replaceregexp>
-                    <regexp pattern="\/\*# sourceMappingURL.*?\*\/" replace="" ignoreCase="true"/>
-                </replaceregexp>
-            </filterchain>
-        </reflexive>
-
-        <!-- delete SCSS map files -->
-        <delete>
-            <fileset dir="tmp/extensions/comments/resources/assets/css">
-                <include name="*.map" />
-            </fileset>
-            <fileset dir="tmp/extensions/ckeditor/resources/assets/css">
-                <include name="*.map" />
-            </fileset>
-        </delete>
-
         <delete file="com_qbsync.zip" quiet="true" />
         <zip destfile="com_qbsync.zip" basedir="tmp" />
 
