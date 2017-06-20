@@ -11,6 +11,14 @@
 
 class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 {
+    const STATUS_ACTIVE   = 'active';
+    const STATUS_INACTIVE = 'inactive';
+
+    public static $status_messages = array(
+        self::STATUS_ACTIVE   => 'Active',
+        self::STATUS_INACTIVE => 'Inactive',
+    );
+
     const TYPE_GROUP          = 'Group';
     const TYPE_INVENTORY_ITEM = 'Inventory';
     const TYPE_SERVICE        = 'Service';
@@ -22,6 +30,34 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
         self::TYPE_INVENTORY_ITEM,
         self::TYPE_GROUP
     );
+
+    public function save()
+    {
+        $this->Active = $this->status == self::STATUS_ACTIVE ? 1 : 0;
+
+        $unit_price = floatval($this->PurchaseCost)
+            + floatval($this->profit)
+            + floatval($this->charges)
+            + floatval($this->drpv)
+            + floatval($this->irpv)
+            + floatval($this->rebates)
+            + floatval($this->stockist)
+        ;
+
+        $this->UnitPrice = $unit_price;
+
+        if ($this->Active && !$unit_price)
+        {
+            $translator = $this->getObject('translator');
+
+            $this->setStatus(KDatabase::STATUS_FAILED);
+            $this->setStatusMessage("Pricing is required for active product");
+
+            return false;
+        }
+
+        return parent::save();
+    }
 
     /**
      * Sync from QBO
