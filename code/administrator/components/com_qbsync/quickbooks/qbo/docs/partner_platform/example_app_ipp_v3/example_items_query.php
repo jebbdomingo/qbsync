@@ -18,7 +18,7 @@ foreach ($items as $Item)
 {
 	//print_r($Item);
 
-	print('Item Id=' . $Item->getId() . ' is named: ' . $Item->getName() . '<br>');
+	print('Item Id=' . $Item->getId() . ' is named: ' . $Item->getName() . 'type: ' . $Item->getType() . '<br>');
 }
 
 /*

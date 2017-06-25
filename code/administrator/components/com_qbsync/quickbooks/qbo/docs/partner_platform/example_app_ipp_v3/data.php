@@ -27,6 +27,7 @@ class ComQbsyncQuickbooksData
         $data = parse_ini_file('data.ini', true);
 
         $this->_data = $data[$env];
+
     }
 
     /**

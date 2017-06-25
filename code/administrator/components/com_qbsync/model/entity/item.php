@@ -45,16 +45,7 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
         ;
 
         $this->UnitPrice = $unit_price;
-
-        if ($this->Active && !$unit_price)
-        {
-            $translator = $this->getObject('translator');
-
-            $this->setStatus(KDatabase::STATUS_FAILED);
-            $this->setStatusMessage("Pricing is required for active product");
-
-            return false;
-        }
+        $this->Type      = 'Inventory';
 
         return parent::save();
     }
@@ -98,38 +89,18 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
 
         if (is_null($ItemRef))
         {
-            $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Type IN ('Inventory', 'Group')");
+            $items = $itemService->query($this->getQboContext(), $this->getQboRealm(), "SELECT * FROM Item WHERE Type IN ('Inventory', 'Group')");
         }
-        else $items = $itemService->query($this->Context, $this->realm, "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND Type IN ('Inventory', 'Group')");
+        else $items = $itemService->query($this->getQboContext(), $this->getQboRealm(), "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND Type IN ('Inventory', 'Group')");
 
         if (count($items) == 0)
         {
             $this->setStatusMessage("Invalid ItemRef {$this->ItemRef}");
             $result = false;
         }
-        else
-        {
-            $result = is_null($ItemRef) ? $items : $items[0];
-        }
+        else $result = is_null($ItemRef) ? $items : $items[0];
 
         return $result;
-    }
-
-    /**
-     * Update quantity purchased
-     *
-     * @param integer $qty
-     *
-     * @return self
-     */
-    public function updateQuantityPurchased($qty)
-    {
-        $qtyPurchased = (int) $this->quantity_purchased;
-        $qty          = (int) $qty;
-        
-        $this->quantity_purchased = ($qtyPurchased + $qty);
-
-        return $this;
     }
 
     /**
@@ -139,41 +110,6 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
      */
     public function hasAvailableStock()
     {
-        $result = false;
-
-        if ($this->Type == 'Group')
-        {
-            // Query grouped items
-            $items = $this->getObject('com://admin/qbsync.model.itemgroups')->parent_id($this->ItemRef)->fetch();
-
-            foreach ($items as $item)
-            {
-                if ($item->_item_type == self::TYPE_INVENTORY_ITEM)
-                {
-                    if (!$this->_checkQuantity($item->_item_qty_onhand, $item->_item_qty_purchased))
-                    {
-                        $result = false;
-                        break;
-                    }
-                    else $result = true;
-                }
-            }
-        }
-        else $result = $this->_checkQuantity($this->QtyOnHand, $this->quantity_purchased);
-
-        return $result;
-    }
-
-    protected function _checkQuantity($onHand, $purchases)
-    {
-        $result = false;
-
-        $inventoryQty = ((int) $onHand - (int) $purchases);
-
-        if ($inventoryQty > 0) {
-            $result = true;
-        }
-
-        return $result;
+        return (bool) $this->QtyOnHand;
     }
 }

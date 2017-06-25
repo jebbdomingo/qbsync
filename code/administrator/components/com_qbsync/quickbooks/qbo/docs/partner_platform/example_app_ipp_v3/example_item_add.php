@@ -14,9 +14,14 @@ $ItemService = new QuickBooks_IPP_Service_Item();
 
 $Item = new QuickBooks_IPP_Object_Item();
 
-$Item->setName('My Item');
+$Item->setName('Magic Mirror');
 $Item->setType('Inventory');
-$Item->setIncomeAccountRef('53');
+$Item->setTrackQtyOnHand(true);
+$Item->setQtyOnHand(10);
+$Item->setIncomeAccountRef('125');
+$Item->setExpenseAccountRef('126');
+$Item->setAssetAccountRef('124');
+$Item->setInvStartDate(date('Y-m-d'));
 
 if ($resp = $ItemService->add($Context, $realm, $Item))
 {

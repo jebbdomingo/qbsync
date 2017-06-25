@@ -12,20 +12,6 @@
 class ComQbsyncQuickbooksModelEntityRow extends KModelEntityRow
 {
     /**
-     * QuickBooks Context
-     *
-     * @var mixed
-     */
-    protected $Context;
-
-    /**
-     * QuickBooks realm
-     *
-     * @var mixed
-     */
-    protected $realm;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -53,9 +39,10 @@ class ComQbsyncQuickbooksModelEntityRow extends KModelEntityRow
         if ($IntuitAnywhere->check($config->username, $config->tenant) and 
             $IntuitAnywhere->test($config->username, $config->tenant))
         {
-            $quickbooks_is_connected = true;
-            $IPP                     = new QuickBooks_IPP($config->dsn);
-            $creds                   = $IntuitAnywhere->load($config->username, $config->tenant);
+            $this->setProperty('_qbo_connected', true);
+
+            $IPP   = new QuickBooks_IPP($config->dsn);
+            $creds = $IntuitAnywhere->load($config->username, $config->tenant);
 
             $IPP->authMode(
                 QuickBooks_IPP::AUTHMODE_OAUTH, 
@@ -66,10 +53,10 @@ class ComQbsyncQuickbooksModelEntityRow extends KModelEntityRow
                 $IPP->sandbox(true);
             }
 
-            $this->realm   = $creds['qb_realm'];
-            $this->Context = $IPP->context();
+            $this->setProperty('_qbo_ipp', $IPP);
+            $this->setProperty('_qbo_realm', $creds['qb_realm']);
         }
-        else $quickbooks_is_connected = false;
+        else $this->setProperty('_qbo_connected', false);
     }
 
     /**
@@ -96,5 +83,45 @@ class ComQbsyncQuickbooksModelEntityRow extends KModelEntityRow
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Check if Nucleon+ is connected to QuickBooks Online
+     *
+     * @return boolean
+     */
+    public function isQboConnected()
+    {
+        return $this->_qbo_connected;
+    }
+
+    /**
+     * Get IPP Context
+     *
+     * @return QuickBooks_IPP_Context
+     */
+    public function getQboContext()
+    {
+        return $this->_qbo_ipp->context();
+    }
+
+    /**
+     * Get realm
+     *
+     * @return string
+     */
+    public function getQboRealm()
+    {
+        return $this->_qbo_realm;
+    }
+
+    /**
+     * Get IPP
+     *
+     * @return QuickBooks_IPP
+     */
+    public function getQboIpp()
+    {
+        return $this->_qbo_ipp;
     }
 }

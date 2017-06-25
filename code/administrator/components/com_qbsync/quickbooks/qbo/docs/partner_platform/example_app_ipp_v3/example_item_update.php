@@ -13,11 +13,15 @@ require_once dirname(__FILE__) . '/views/header.tpl.php';
 $ItemService = new QuickBooks_IPP_Service_Item();
 
 // Get the existing item 
-$items = $ItemService->query($Context, $realm, "SELECT * FROM Item WHERE Id = '2' ");
+$items = $ItemService->query($Context, $realm, "SELECT * FROM Item WHERE Id = '58' ");
 $Item = $items[0];
 
 // Update the name of the item
-$Item->setName($Item->getName() . ' ' . mt_rand(0, 1000));
+$Item->setName($Item->getName());
+// $Item->setType('Inventory');
+// $Item->setUnitPrice(70);
+// $Item->setPurchaseCost(30);
+$Item->setDescription($Item->getName() . ' ' . mt_rand(0, 1000) . ' description');
 
 if ($resp = $ItemService->update($Context, $realm, $Item->getId(), $Item))
 {

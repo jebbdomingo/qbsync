@@ -117,4 +117,101 @@ class ComQbsyncDatabaseBehaviorSyncable extends KDatabaseBehaviorAbstract
             }
         }
     }
+
+    protected function _beforeInsert(KDatabaseContext $context)
+    {
+        $unit_price = floatval($this->PurchaseCost)
+            + floatval($this->profit)
+            + floatval($this->charges)
+            + floatval($this->drpv)
+            + floatval($this->irpv)
+            + floatval($this->rebates)
+            + floatval($this->stockist)
+        ;
+
+        if ($this->status && !$unit_price)
+        {
+            $translator = $this->getObject('translator');
+
+            $this->setStatus(KDatabase::STATUS_FAILED);
+            $this->setStatusMessage($translator->translate('Pricing is required to activate product'));
+
+            return false;
+        }
+    }
+
+    /**
+     * Create QBO item
+     *
+     * @param KDatabaseContext  $context A database context object
+     * @return void
+     */
+    protected function _afterInsert(KDatabaseContext $context)
+    {
+        $data = $context->data;
+
+        if ($context->affected !== false && $data->isQboConnected())
+        {
+            $config      = $this->getObject('com:nucleonplus.accounting.service.data');
+            $ItemService = new QuickBooks_IPP_Service_Item();
+
+            $Item = new QuickBooks_IPP_Object_Item();
+            $Item->setType('Inventory');
+            $Item->setName($data->Name);
+            $Item->setDescription($data->Description);
+            $Item->setUnitPrice($data->UnitPrice);
+            $Item->setPurchaseCost($data->PurchaseCost);
+            $Item->setTrackQtyOnHand(true);
+            $Item->setQtyOnHand($data->QtyOnHand);
+            $Item->setIncomeAccountRef($config->ACCOUNT_SALES_INCOME);
+            $Item->setExpenseAccountRef($config->ACCOUNT_COGS);
+            $Item->setAssetAccountRef($config->ACCOUNT_INVENTORY_ASSET);
+            $Item->setInvStartDate(date('Y-m-d'));
+
+            if ($resp = $ItemService->add($data->getQboContext(), $data->getQboRealm(), $Item))
+            {
+                $data->ItemRef = QuickBooks_IPP_IDS::usableIDType($resp);
+                $data->save();
+            }
+            else throw new KControllerExceptionActionFailed($ItemService->lastError($data->getQboContext()));
+        }
+    }
+
+    /**
+     * Update a QBO item
+     *
+     * @param KDatabaseContext  $context A database context object
+     * @return void
+     */
+    protected function _afterUpdate(KDatabaseContext $context)
+    {
+        $data = $context->data;
+
+        if ($context->affected !== false && $data->isQboConnected())
+        {
+            foreach ($data as $item)
+            {
+                $config      = $this->getObject('com:nucleonplus.accounting.service.data');
+                $ItemService = new QuickBooks_IPP_Service_Item();
+
+                // Get the existing item 
+                $items = $ItemService->query($item->getQboContext(), $item->getQboRealm(), "SELECT * FROM Item WHERE Id = '{$data->ItemRef}' ");
+
+                $Item = $items[0];
+                $Item->setType('Inventory');
+                $Item->setName($data->Name);
+                $Item->setDescription($data->Description);
+                $Item->setUnitPrice($data->UnitPrice);
+                $Item->setPurchaseCost($data->PurchaseCost);
+                $Item->setQtyOnHand($data->QtyOnHand);
+                $Item->setIncomeAccountRef($config->ACCOUNT_SALES_INCOME);
+                $Item->setExpenseAccountRef($config->ACCOUNT_COGS);
+                $Item->setAssetAccountRef($config->ACCOUNT_INVENTORY_ASSET);
+
+                if (!$ItemService->update($item->getQboContext(), $item->getQboRealm(), $Item->getId(), $Item)) {
+                    throw new KControllerExceptionActionFailed($ItemService->lastError($item->getQboContext()));
+                }
+            }
+        }
+    }
 }
