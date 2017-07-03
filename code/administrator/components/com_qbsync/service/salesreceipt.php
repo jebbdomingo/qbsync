@@ -58,8 +58,9 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityRow
         }
 
         $SalesReceiptService = new QuickBooks_IPP_Service_SalesReceipt();
+        $resp = $SalesReceiptService->add($this->getQboContext(), $this->getQboRealm(), $SalesReceipt);
 
-        if ($resp = $SalesReceiptService->add($this->getQboContext(), $this->getQboRealm(), $SalesReceipt))
+        if ($resp)
         {
             // Sync corresponding account transfers in online salesreceipts
             // if ($this->transaction_type == 'online') {
@@ -69,9 +70,9 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             // Sync items to get updated quantity
             $this->_syncItems($items);
 
-            return true;
+            return QuickBooks_IPP_IDS::usableIDType($resp);
         }
-        else throw new KControllerExceptionActionFailed('SalesReceipt Creation Error: ' . $SalesReceiptService->lastError($this->Context));
+        else throw new KControllerExceptionActionFailed('SalesReceipt Creation Error: ' . $SalesReceiptService->lastError($this->getQboContext()));
     }
 
     /**
