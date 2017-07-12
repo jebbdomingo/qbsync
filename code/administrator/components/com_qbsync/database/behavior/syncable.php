@@ -197,19 +197,20 @@ class ComQbsyncDatabaseBehaviorSyncable extends KDatabaseBehaviorAbstract
                 // Get the existing item 
                 $items = $ItemService->query($item->getQboContext(), $item->getQboRealm(), "SELECT * FROM Item WHERE Id = '{$data->ItemRef}' ");
 
-                $Item = $items[0];
-                $Item->setType('Inventory');
-                $Item->setName($data->Name);
-                $Item->setDescription($data->Description);
-                $Item->setUnitPrice($data->UnitPrice);
-                $Item->setPurchaseCost($data->PurchaseCost);
-                $Item->setQtyOnHand($data->QtyOnHand);
-                $Item->setIncomeAccountRef($config->ACCOUNT_SALES_INCOME);
-                $Item->setExpenseAccountRef($config->ACCOUNT_COGS);
-                $Item->setAssetAccountRef($config->ACCOUNT_INVENTORY_ASSET);
+                if (count($items))
+                {
+                    $Item = $items[0];
+                    $Item->setType('Inventory');
+                    $Item->setName($data->Name);
+                    $Item->setDescription($data->Description);
+                    $Item->setUnitPrice($data->UnitPrice);
+                    $Item->setIncomeAccountRef($config->ACCOUNT_SALES_INCOME);
+                    $Item->setExpenseAccountRef($config->ACCOUNT_COGS);
+                    $Item->setAssetAccountRef($config->ACCOUNT_INVENTORY_ASSET);
 
-                if (!$ItemService->update($item->getQboContext(), $item->getQboRealm(), $Item->getId(), $Item)) {
-                    throw new KControllerExceptionActionFailed($ItemService->lastError($item->getQboContext()));
+                    if (!$ItemService->update($item->getQboContext(), $item->getQboRealm(), $Item->getId(), $Item)) {
+                        throw new KControllerExceptionActionFailed($ItemService->lastError($item->getQboContext()));
+                    }
                 }
             }
         }

@@ -19,8 +19,6 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityRow
      */
     public function create(array $data)
     {
-        $config = $this->getObject('com:nucleonplus.accounting.service.data');
-        
         // Create the salesreceipt object
         $SalesReceipt = new QuickBooks_IPP_Object_SalesReceipt();
         $SalesReceipt->setDepositToAccountRef($data['DepositToAccountRef']);

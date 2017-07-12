@@ -14,7 +14,9 @@ class ComQbsyncDatabaseTableItems extends KDatabaseTableAbstract
     {
         $config->append(array(
             'behaviors' => array(
-                'syncable'
+                'creatable',
+                'modifiable',
+                'syncable',
             ),
             'filters' => array(
                 'fulltext' => array('trim')
