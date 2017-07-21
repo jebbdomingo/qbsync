@@ -69,7 +69,9 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
             $this->QtyOnHand    = $Item->getQtyOnHand();
             $this->UnitPrice    = $Item->getUnitPrice();
             $this->PurchaseCost = $Item->getPurchaseCost();
-
+            $this->Type         = $Item->getType();
+            $this->Name         = $Item->getName();
+            $this->Description  = $Item->getDescription();
             $this->save();
 
             $result = true;
