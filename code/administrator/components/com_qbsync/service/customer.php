@@ -57,7 +57,7 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityRow
         if ($resp) {
             return QuickBooks_IPP_IDS::usableIDType($resp);
         } else {
-            throw new Exception('Error in creating Customer in QBO: ' . $CustomerService->lastError($this->getQboContext()));
+            throw new KControllerExceptionActionFailed('Error in creating Customer in QBO: ' . $CustomerService->lastError($this->getQboContext()));
         }
     }
 
