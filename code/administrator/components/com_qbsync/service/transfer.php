@@ -11,7 +11,7 @@
 class ComQbsyncServiceTransfer extends ComQbsyncQuickbooksModelEntityRow
 {
     /**
-     * Create customer record
+     * Create transfer transaction
      *
      * @param array  $data
      * @throws Exception

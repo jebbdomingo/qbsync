@@ -3,7 +3,7 @@
  * Nucleon Plus
  *
  * @package     Nucleon Plus
- * @copyright   Copyright (C) 2015 - 2020 Nucleon Plus Co. (http://www.nucleonplus.com)
+ * @copyright   Copyright (C) 2017 Nucleon Plus Co. (http://www.nucleonplus.com)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */        https://github.com/nooku/nooku-framework for the canonical source repository
@@ -60,45 +60,12 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityRow
 
         if ($resp)
         {
-            // Sync corresponding account transfers in online salesreceipts
-            // if ($this->transaction_type == 'online') {
-            //     $this->_syncTransfers($this->DocNumber);
-            // }
-
             // Sync items to get updated quantity
             $this->_syncItems($items);
 
             return QuickBooks_IPP_IDS::usableIDType($resp);
         }
         else throw new KControllerExceptionActionFailed('SalesReceipt Creation Error: ' . $SalesReceiptService->lastError($this->getQboContext()));
-    }
-
-    /**
-     * Sync releated account funds transfers
-     *
-     * @param integer $entity_id
-     *
-     * @return boolean
-     */
-    protected function _syncTransfers($entity_id)
-    {
-        $transfers = $this->getObject('com:qbsync.model.transfers')
-            ->entity('order')
-            ->entity_id($entity_id)
-            ->fetch()
-        ;
-
-        foreach ($transfers as $transfer)
-        {
-            if ($transfer->sync() === false)
-            {
-                $this->setStatusMessage("Syncing Related Transfer Transaction #{$transfer->id} failed for Sales Receipt with Doc Number {$transfer->entity_id}");
-
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
