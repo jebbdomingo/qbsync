@@ -111,7 +111,7 @@ class ComQbsyncServiceJournal extends ComQbsyncQuickbooksModelEntityRow
             return QuickBooks_IPP_IDS::usableIDType($resp);
         } else {
             $data = print_r($data, true);
-            throw new KControllerExceptionActionFailed('Error creating the Journal Entry in QBO: ' . $TransferService->lastError($this->getQboContext()) . $data);
+            throw new KControllerExceptionActionFailed('Error creating the Journal Entry in QBO: ' . $JournalEntryService->lastError($this->getQboContext()) . $data);
         }
     }
 }
