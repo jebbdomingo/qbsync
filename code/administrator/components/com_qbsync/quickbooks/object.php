@@ -81,7 +81,7 @@ class ComQbsyncQuickbooksObject extends KModelEntityRow
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $data = $this->getObject('com:nucleonplus.accounting.service.data');
+        $data = $this->getObject('com:rewardlabs.accounting.data');
         
         $config->append(array(
             'consumer_key'      => $data->CONFIG_CONSUMER_KEY,

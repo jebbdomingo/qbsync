@@ -19,7 +19,7 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityRow
      */
     public function update(array $data)
     {
-        $config = $this->getObject('com:nucleonplus.accounting.service.data');
+        $config = $this->getObject('com:rewardlabs.accounting.data');
         $Item   = $this->get($data['ItemRef']);
 
         if ($Item)

@@ -42,7 +42,7 @@ class ComQbsyncControllerDeposit extends ComQbsyncControllerAbstract
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $data = $this->getObject('com:nucleonplus.accounting.service.data');
+        $data = $this->getObject('com:rewardlabs.accounting.data');
         
         $config->append(array(
             'bank_account' => $data->ACCOUNT_BANK_REF,

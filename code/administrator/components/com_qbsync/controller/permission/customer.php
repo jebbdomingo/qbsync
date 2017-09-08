@@ -18,7 +18,7 @@ class ComQbsyncControllerPermissionCustomer extends ComKoowaControllerPermission
     public function canAdd()
     {
         $data    = $this->getMixer()->getContext()->request->data;
-        $account = $this->getMixer()->getObject('com:nucleonplus.model.accounts')->id($data->account_id)->fetch();
+        $account = $this->getMixer()->getObject('com:rewardlabs.model.accounts')->id($data->account_id)->fetch();
 
         if ($this->getObject('user')->isAuthentic()) {
             return true;

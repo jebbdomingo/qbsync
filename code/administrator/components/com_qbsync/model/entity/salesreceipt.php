@@ -34,7 +34,7 @@ class ComQbsyncModelEntitySalesreceipt extends ComQbsyncQuickbooksModelEntityRow
             return false;
         }
 
-        $order = $this->getObject('com://admin/nucleonplus.model.orders')->id($this->DocNumber)->fetch();
+        $order = $this->getObject('com://admin/rewardlabs.model.orders')->id($this->DocNumber)->fetch();
         if (count($order) == 0) {
             $this->setStatusMessage("Corresponding Order #{$this->DocNumber} not found");
             return false;

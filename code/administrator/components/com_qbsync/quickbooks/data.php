@@ -26,7 +26,7 @@ class ComQbsyncQuickbooksData extends KObject
         parent::__construct($config);
 
         $env   = getenv('APP_ENV');
-        $model = $this->getObject('com://admin/nucleonplus.model.configs');
+        $model = $this->getObject('com://admin/rewardlabs.model.configs');
 
         switch ($env) {
             case 'staging':
