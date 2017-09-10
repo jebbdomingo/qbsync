@@ -47,6 +47,7 @@
             <folder>model</folder>
             <folder>quickbooks</folder>
             <folder>resources</folder>
+            <folder>service</folder>
             <folder>template</folder>
             <folder>view</folder>
 
