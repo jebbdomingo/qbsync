@@ -25,7 +25,7 @@ class ComQbsyncQuickbooksData extends KObject
     {
         parent::__construct($config);
 
-        $env   = getenv('APP_ENV');
+        $env   = getenv('HTTP_APP_ENV');
         $model = $this->getObject('com://admin/rewardlabs.model.configs');
 
         switch ($env) {

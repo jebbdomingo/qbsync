@@ -23,7 +23,7 @@ class ComQbsyncQuickbooksData
      */
     public function __construct()
     {
-        $env  = getenv('APP_ENV');
+        $env  = getenv('HTTP_APP_ENV');
         $data = parse_ini_file('data.ini', true);
 
         $this->_data = $data[$env];
