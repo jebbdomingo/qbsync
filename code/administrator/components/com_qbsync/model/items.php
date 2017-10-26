@@ -15,7 +15,9 @@ class ComQbsyncModelItems extends KModelDatabase
         parent::__construct($config);
 
         $this->getState()
-            ->insert('ItemRef', 'int')
+            ->insert('ItemRef'    , 'int')
+            ->insert('app'        , 'cmd'   , null, true)
+            ->insert('app_entity' , 'cmd'   , null, true)
         ;
     }
 
@@ -38,6 +40,14 @@ class ComQbsyncModelItems extends KModelDatabase
 
         if ($state->ItemRef) {
             $query->where('tbl.ItemRef IN :ItemRef')->bind(array('ItemRef' => (array) $state->ItemRef));
+        }
+
+        if ($state->app) {
+            $query->where('app = :app')->bind(array('app' => $state->app));
+        }
+
+        if ($state->app_entity) {
+            $query->where('app_entity = :app_entity')->bind(array('app_entity' => $state->app_entity));
         }
 
         // Exclude unused qbo items
