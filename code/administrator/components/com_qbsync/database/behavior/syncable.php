@@ -152,7 +152,7 @@ class ComQbsyncDatabaseBehaviorSyncable extends KDatabaseBehaviorAbstract
 
         if ($context->affected !== false && $data->isQboConnected())
         {
-            $config      = $this->getObject('com:rewardlabs.accounting.data');
+            $config      = $this->getObject('com://site/rewardlabs.accounting.data');
             $ItemService = new QuickBooks_IPP_Service_Item();
 
             $Item = new QuickBooks_IPP_Object_Item();
