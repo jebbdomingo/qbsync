@@ -1,26 +1,17 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 4541
-#
-# http://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: nucleonplus-db-instance.cjitsulcoyi6.us-west-2.rds.amazonaws.com (MySQL 5.6.27-log)
-# Database: nucleonplus
-# Generation Time: 2017-04-09 10:06:08 +0000
-# ************************************************************
-
-
-# Dump of table #__qbsync_items
+# Dump of table j_qbsync_items
 # ------------------------------------------------------------
 
-CREATE TABLE `#__qbsync_items` (
+DROP TABLE IF EXISTS `j_qbsync_items`;
+
+CREATE TABLE `j_qbsync_items` (
   `qbsync_item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `app` varchar(255) DEFAULT NULL,
+  `app_entity` varchar(255) DEFAULT NULL,
   `ItemRef` int(11) NOT NULL,
   `Name` varchar(255) NOT NULL,
   `Description` text NOT NULL,
   `fulltext` text NOT NULL,
-  `status` varchar(50) NOT NULL,
+  `status` varchar(50) NOT NULL DEFAULT '',
   `Active` tinyint(4) NOT NULL,
   `Taxable` tinyint(4) NOT NULL,
   `Type` varchar(50) NOT NULL,
@@ -43,6 +34,5 @@ CREATE TABLE `#__qbsync_items` (
   `created_by` int(11) NOT NULL,
   `modified_on` datetime NOT NULL,
   `modified_by` int(11) NOT NULL,
-  PRIMARY KEY (`qbsync_item_id`),
-  UNIQUE KEY `ItemRef` (`ItemRef`)
+  PRIMARY KEY (`qbsync_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
