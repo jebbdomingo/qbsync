@@ -1,9 +1,9 @@
-# Dump of table j_qbsync_items
+# Dump of table #__qbsync_items
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `j_qbsync_items`;
+DROP TABLE IF EXISTS `#__qbsync_items`;
 
-CREATE TABLE `j_qbsync_items` (
+CREATE TABLE `#__qbsync_items` (
   `qbsync_item_id` int(11) NOT NULL AUTO_INCREMENT,
   `app` varchar(255) DEFAULT NULL,
   `app_entity` varchar(255) DEFAULT NULL,
