@@ -8,40 +8,92 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityRow
+use QuickBooksOnline\API\Facades\Item;
+
+class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
 {
     /**
-     * Update record
+     * Create record
      *
      * @param array  $data
      * @throws Exception
      * @return string
      */
+    public function create(array $data)
+    {
+        // Add a record
+        $data = Item::create(array(
+            'Type'              => $data['Type'],
+            'Name'              => $data['Name'],
+            'Description'       => $data['Description'],
+            'UnitPrice'         => $data['UnitPrice'],
+            'PurchaseCost'      => $data['PurchaseCost'],
+            'TrackQtyOnHand'    => $data['TrackQtyOnHand'],
+            'QtyOnHand'         => $data['QtyOnHand'],
+            'IncomeAccountRef'  => array(
+                'value' => $data['IncomeAccountRef'],
+                'name'  => 'Sales income'
+            ),
+            'ExpenseAccountRef' => array(
+                'value' => $data['ExpenseAccountRef'],
+                'name'  => 'Cost of goods sold'
+            ),
+            'AssetAccountRef'   => array(
+                'value' => $data['AssetAccountRef'],
+                'name'  => 'Inventory asset'
+            ),
+            'InvStartDate'      => $data['InvStartDate'],
+        ));
+
+        $result = $this->getDataService()->Add($data);
+        $error  = $this->getDataService()->getLastError();
+
+        if ($error)
+        {
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+
+            throw new KControllerExceptionActionFailed('Error in creating Item in QBO: ' . $error_message);
+        }
+        else return $result->Id;
+    }
+
+    /**
+     * Update customer record
+     *
+     * @param array  $data
+     * @throws KControllerExceptionActionFailed
+     * @return void
+     */
     public function update(array $data)
     {
-        $config = $this->getObject('com:rewardlabs.accounting.data');
-        $Item   = $this->get($data['ItemRef']);
+        // Get the existing entity first (you need the latest SyncToken value)
+        $entity = $this->get($data['ItemRef']);
 
-        if ($Item)
+        $updated_entity = Item::update($entity, array(
+            // If you are going to do a full Update, set sparse to false
+            'sparse'      => true,
+            'Name'        => $data['Name'],
+            'Description' => $data['Description'],
+            'UnitPrice'   => $data['UnitPrice'],
+        ));
+
+        $result = $this->getDataService()->Update($updated_entity);
+        $error  = $this->getDataService()->getLastError();
+
+        if ($error != null)
         {
-            $Item->setType('Inventory');
-            $Item->setName($data['Name']);
-            $Item->setDescription($data['Description']);
-            $Item->setUnitPrice($data['UnitPrice']);
-            $Item->setIncomeAccountRef($config->ACCOUNT_SALES_INCOME);
-            $Item->setExpenseAccountRef($config->ACCOUNT_COGS);
-            $Item->setAssetAccountRef($config->ACCOUNT_INVENTORY_ASSET);
-
-            $ItemService = new QuickBooks_IPP_Service_Item();
-
-            if (!$ItemService->update($item->getQboContext(), $item->getQboRealm(), $Item->getId(), $Item)) {
-                throw new KControllerExceptionActionFailed($ItemService->lastError($item->getQboContext()));
-            }
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+            
+            throw new KControllerExceptionActionFailed('Error in updating Item in QBO: ' . $error_message);
         }
     }
 
     /**
-     * Get record
+     * Get customer record
      *
      * @param  mixed $id]
      *
@@ -49,15 +101,24 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityRow
      */
     public function get($id)
     {
-        $ItemService = new QuickBooks_IPP_Service_Item();
+        $result   = false;
+        $entities = $this->getDataService()->Query("SELECT * FROM Item where Id='{$id}'");
+        $error    = $this->getDataService()->getLastError();
 
-        // Get the existing item 
-        $items = $ItemService->query($this->getQboContext(), $this->getQboRealm(), "SELECT * FROM Item WHERE Id = '{$id}' ");
-
-        if (count($items)) {
-            return $items[0];
-        } else {
-            return false;
+        if ($error)
+        {
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+            
+            throw new KControllerExceptionActionFailed('Error in querying Items in QBO: ' . $error_message);
         }
+
+        if (!empty($entities)) {
+            // Get the first element
+            $result = reset($entities);
+        }
+
+        return $result;
     }
 }

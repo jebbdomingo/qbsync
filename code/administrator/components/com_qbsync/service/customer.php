@@ -8,7 +8,9 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityRow
+use QuickBooksOnline\API\Facades\Customer;
+
+class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityAbstract
 {
     /**
      * Create customer record
@@ -19,46 +21,39 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityRow
      */
     public function create(array $data)
     {
-        // Create the customer object
-        $Customer = new QuickBooks_IPP_Object_Customer();
+        // Add a customer
+        $customer = Customer::create(array(
+            "DisplayName"        => $data['DisplayName'],
+            'PrintOnCheckName'   => $data['PrintOnCheckName'],
+            "PrimaryPhone"       => array(
+                "FreeFormNumber" => $data['PrimaryPhone']
+            ),
+            "Mobile" => array(
+                "FreeFormNumber" => $data['Mobile']
+            ),
+            "PrimaryEmailAddr" => array(
+                "Address" => $data['PrimaryEmailAddr']
+            ),
+            "BillAddr" => array(
+                "Line1"      =>  $data['Line1'],
+                "City"       =>  $data['City'],
+                "Country"    =>  $data['Country'],
+                "PostalCode" =>  $data['PostalCode']
+            ),
+        ));
 
-        // Make display name unique
-        $Customer->setDisplayName($data['DisplayName']);
-        $Customer->setPrintOnCheckName($data['PrintOnCheckName']);
+        $result = $this->getDataService()->Add($customer);
+        $error  = $this->getDataService()->getLastError();
 
-        // Phone #
-        $PrimaryPhone = new QuickBooks_IPP_Object_PrimaryPhone();
-        $PrimaryPhone->setFreeFormNumber($data['PrimaryPhone']);
-        $Customer->setPrimaryPhone($PrimaryPhone);
+        if ($error)
+        {
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
 
-        // Mobile #
-        $Mobile = new QuickBooks_IPP_Object_Mobile();
-        $Mobile->setFreeFormNumber($data['Mobile']);
-        $Customer->setMobile($Mobile);
-
-        // Bill address
-        $BillAddr = new QuickBooks_IPP_Object_BillAddr();
-        $BillAddr->setLine1($data['Line1']);
-        $BillAddr->setCity($data['City']);
-        $BillAddr->setState($data['State']);
-        $BillAddr->setPostalCode($data['PostalCode']);
-        $BillAddr->setCountry($data['Country']);
-        $Customer->setBillAddr($BillAddr);
-
-        // Email
-        $PrimaryEmailAddr = new QuickBooks_IPP_Object_PrimaryEmailAddr();
-        $PrimaryEmailAddr->setAddress($data['PrimaryEmailAddr']);
-        $Customer->setPrimaryEmailAddr($PrimaryEmailAddr);
-
-        $CustomerService = new QuickBooks_IPP_Service_Customer();
-        $resp = $CustomerService->add($this->getQboContext(), $this->getQboRealm(), $Customer);
-        // $resp = false;
-
-        if ($resp) {
-            return QuickBooks_IPP_IDS::usableIDType($resp);
-        } else {
-            throw new KControllerExceptionActionFailed('Error in creating Customer in QBO: ' . $CustomerService->lastError($this->getQboContext()));
+            throw new KControllerExceptionActionFailed('Error in creating Customer in QBO: ' . $error_message);
         }
+        else return $result->Id;
     }
 
     /**
@@ -71,51 +66,41 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityRow
     public function update(array $data)
     {
         // Get the existing customer first (you need the latest SyncToken value)
-        $Customer = $this->get($data['CustomerRef']);
+        $customer = $this->get($data['CustomerRef']);
 
-        // Make display name unique
-        $Customer->setDisplayName($data['DisplayName']);
-        $Customer->setPrintOnCheckName($data['PrintOnCheckName']);
-        $Customer->setActive($data['Active'] ? 'true' : 'false');
+        $updated_customer = Customer::update($customer, array(
+            // If you are going to do a full Update, set sparse to false
+            'sparse'           => true,
+            'DisplayName'      => $data['DisplayName'],
+            'PrintOnCheckName' => $data['PrintOnCheckName'],
+            'Active'           => $data['Active'] ? 'true' : 'false',
+            "PrimaryPhone"     => array(
+                "FreeFormNumber" => $data['PrimaryPhone']
+            ),
+            "Mobile" => array(
+                "FreeFormNumber" => $data['Mobile']
+            ),
+            "PrimaryEmailAddr" => array(
+                "Address" => $data['PrimaryEmailAddr']
+            ),
+            "BillAddr" => array(
+                "Line1"      =>  $data['Line1'],
+                "City"       =>  $data['City'],
+                "Country"    =>  $data['Country'],
+                "PostalCode" =>  $data['PostalCode']
+            )
+        ));
 
-        // Phone #
-        $PrimaryPhone = $Customer->getPrimaryPhone();
-        if (!$PrimaryPhone)
+        $result = $this->getDataService()->Update($updated_customer);
+        $error  = $this->getDataService()->getLastError();
+
+        if ($error != null)
         {
-            $PrimaryPhone = new QuickBooks_IPP_Object_PrimaryPhone();
-            $PrimaryPhone->setFreeFormNumber($data['PrimaryPhone']);
-            $Customer->setPrimaryPhone($PrimaryPhone);
-        }
-        else $PrimaryPhone->setFreeFormNumber($data['PrimaryPhone']);
-
-        // Mobile #
-        $Mobile = $Customer->getMobile();
-        if (!$Mobile)
-        {
-            $Mobile = new QuickBooks_IPP_Object_Mobile();
-            $Mobile->setFreeFormNumber($data['Mobile']);
-            $Customer->setMobile($Mobile);
-        }
-        else $Mobile->setFreeFormNumber($data['Mobile']);
-
-        // Bill address
-        $BillAddr = $Customer->getBillAddr();
-        $BillAddr->setLine1($data['Line1']);
-        $BillAddr->setCity($data['City']);
-        $BillAddr->setState($data['State']);
-        $BillAddr->setPostalCode($data['PostalCode']);
-        $BillAddr->setCountry($data['Country']);
-
-        // Email
-        $PrimaryEmailAddr = $Customer->getPrimaryEmailAddr();
-        $PrimaryEmailAddr->setAddress($data['PrimaryEmailAddr']);
-
-        $CustomerService = new QuickBooks_IPP_Service_Customer();
-
-        $resp = $CustomerService->update($this->getQboContext(), $this->getQboRealm(), $Customer->getId(), $Customer);
-
-        if (!$resp) {
-            throw new KControllerExceptionActionFailed('Error in updating Customer in QBO: ' . $CustomerService->lastError($this->getQboContext()));
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+            
+            throw new KControllerExceptionActionFailed('Error in updating Customer in QBO: ' . $error_message);
         }
     }
 
@@ -128,15 +113,24 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityRow
      */
     public function get($id)
     {
-        $CustomerService = new QuickBooks_IPP_Service_Customer();
+        $result   = false;
+        $entities = $this->getDataService()->Query("SELECT * FROM Customer where Id='{$id}'");
+        $error    = $this->getDataService()->getLastError();
 
-        // Get the existing customer first (you need the latest SyncToken value)
-        $customers = $CustomerService->query($this->getQboContext(), $this->getQboRealm(), "SELECT * FROM Customer WHERE Id = '{$id}' ");
-
-        if (!count($customers)) {
-            return false;
-        } else {
-            return $customers[0];
+        if ($error)
+        {
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+            
+            throw new KControllerExceptionActionFailed('Error in updating Customer in QBO: ' . $error_message);
         }
+
+        if (!empty($entities)) {
+            // Get the first element
+            $result = reset($entities);
+        }
+
+        return $result;
     }
 }
