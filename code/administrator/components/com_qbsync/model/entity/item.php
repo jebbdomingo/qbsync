@@ -9,7 +9,7 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityRow
+class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityAbstract
 {
     const STATUS_ACTIVE   = 'active';
     const STATUS_INACTIVE = 'inactive';
