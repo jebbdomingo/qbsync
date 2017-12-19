@@ -104,4 +104,82 @@ class ComQbsyncQuickbooksModelEntityAbstract extends KModelEntityRow
     {
         return $this->_data_service;
     }
+
+    /**
+     * Add action
+     *
+     * @param  QuickBooksOnline\API\Facades $entity
+     * @param  string                       $error_message
+     * @return QuickBooksOnline\API\Facades
+     */
+    public function add($entity, $error_message = 'Error: ')
+    {
+        $result = $this->getDataService()->Add($entity);
+        $error  = $this->getDataService()->getLastError();
+
+        if ($error)
+        {
+            $details = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $details .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $details .= "The Response message is: {$error->getResponseBody()}\n";
+
+            throw new KControllerExceptionActionFailed($error_message . $details);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Update action
+     *
+     * @param  QuickBooksOnline\API\Facades $entity
+     * @param  string                       $error_message
+     * @return QuickBooksOnline\API\Facades
+     */
+    public function edit($entity, $error_message = 'Error: ')
+    {
+        $result = $this->getDataService()->Update($entity);
+        $error  = $this->getDataService()->getLastError();
+
+        if ($error)
+        {
+            $details = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $details .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $details .= "The Response message is: {$error->getResponseBody()}\n";
+
+            throw new KControllerExceptionActionFailed($error_message . $details);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fetch QBO record
+     *
+     * @param  string $entity
+     * @param  mixed  $id
+     * @return bool|QuickBooksOnline\API\Facades
+     */
+    public function fetch($entity, $id)
+    {
+        $result   = false;
+        $entities = $this->getDataService()->Query("SELECT * FROM {$entity} where Id='{$id}'");
+        $error    = $this->getDataService()->getLastError();
+
+        if ($error)
+        {
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+            
+            throw new KControllerExceptionActionFailed("Error in fetching {$entity} from QBO: {$error_message}");
+        }
+
+        if (!empty($entities)) {
+            // Get the first element
+            $result = reset($entities);
+        }
+
+        return $result;
+    }
 }

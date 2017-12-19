@@ -59,19 +59,18 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityAbstract
      */
     public function sync()
     {
-        $itemService = new QuickBooks_IPP_Service_Term();
-        $result      = false;
+        $result = false;
 
         $Item = $this->_fetchItem($this->ItemRef);
 
         if ($Item !== false)
         {
-            $this->QtyOnHand    = $Item->getQtyOnHand();
-            $this->UnitPrice    = $Item->getUnitPrice();
-            $this->PurchaseCost = $Item->getPurchaseCost();
-            $this->Type         = $Item->getType();
-            $this->Name         = $Item->getName();
-            $this->Description  = $Item->getDescription();
+            $this->QtyOnHand    = $Item->QtyOnHand;
+            $this->UnitPrice    = $Item->UnitPrice;
+            $this->PurchaseCost = $Item->PurchaseCost;
+            $this->Type         = $Item->Type;
+            $this->Name         = $Item->Name;
+            $this->Description  = $Item->Description;
             $this->save();
 
             $result = true;
@@ -87,20 +86,37 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityAbstract
 
     protected function _fetchItem($ItemRef = null)
     {
-        $itemService = new QuickBooks_IPP_Service_Term();
+        $result = false;
 
         if (is_null($ItemRef))
         {
-            $items = $itemService->query($this->getQboContext(), $this->getQboRealm(), "SELECT * FROM Item WHERE Type IN ('Inventory', 'Group')");
+            $items = $this->getDataService()->Query("SELECT * FROM Item");
         }
-        else $items = $itemService->query($this->getQboContext(), $this->getQboRealm(), "SELECT * FROM Item WHERE Id = '{$ItemRef}' AND Type IN ('Inventory', 'Group')");
-
-        if (count($items) == 0)
+        else
         {
-            $this->setStatusMessage("Invalid ItemRef {$this->ItemRef}");
-            $result = false;
+            $items = $this->getDataService()->Query("SELECT * FROM Item where Id='{$ItemRef}'");
+
+            if (!empty($items)) {
+                // Get the first element
+                $items = reset($items);
+            }
         }
-        else $result = is_null($ItemRef) ? $items : $items[0];
+
+        $error = $this->getDataService()->getLastError();
+        if ($error)
+        {
+            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
+            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
+            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
+            
+            throw new KControllerExceptionActionFailed('Error in Querying Item(s) in QBO: ' . $error_message);
+        }
+
+        if (count($items) == 0) {
+            $this->setStatusMessage("Invalid ItemRef {$ItemRef}");
+        } else {
+            $result = $items;
+        }
 
         return $result;
     }

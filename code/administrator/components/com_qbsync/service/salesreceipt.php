@@ -8,7 +8,9 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */        https://github.com/nooku/nooku-framework for the canonical source repository
 
-class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityRow
+use QuickBooksOnline\API\Facades\SalesReceipt;
+
+class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityAbstract
 {
     /**
      * Create salesreceipt record
@@ -19,53 +21,48 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityRow
      */
     public function create(array $data)
     {
-        // Create the salesreceipt object
-        $SalesReceipt = new QuickBooks_IPP_Object_SalesReceipt();
-        $SalesReceipt->setDepositToAccountRef($data['DepositToAccountRef']);
-        $SalesReceipt->setDepartmentRef($data['DepartmentRef']);
-        $SalesReceipt->setDocNumber("NUC-SR-{$data['DocNumber']}");
-        $SalesReceipt->setTxnDate($data['TxnDate']);
+        $datum = array(
+            'CustomerRef'         => $data['CustomerRef'],
+            'DepositToAccountRef' => $data['DepositToAccountRef'],
+            'DepartmentRef'       => $data['DepartmentRef'],
+            'DocNumber'           => "NUC-SR-{$data['DocNumber']}",
+            'TxnDate'             => $data['TxnDate'],
 
-        // Set shipping address
-        $ShipAddr = new QuickBooks_IPP_Object_ShipAddr();
-        $ShipAddr->setLine1($data['ShipAddr']['Line1']);
-        $ShipAddr->setLine2($data['ShipAddr']['Line2']);
-        $ShipAddr->setLine3($data['ShipAddr']['Line3']);
-        $SalesReceipt->setShipAddr($ShipAddr);
-
-        if ($data['CustomerRef']) {
-            $SalesReceipt->setCustomerRef($data['CustomerRef']);
-        }
+            'ShipAddr' => array(array(
+                'Line1' => $data['ShipAddr']['Line1'],
+                'Line2' => $data['ShipAddr']['Line2'],
+                'Line3' => $data['ShipAddr']['Line3'],
+            )),
+        );
 
         $items = array();
         foreach ($data['lines'] as $line)
         {
-            $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setDescription($line['Description']);
-            $Line->setDetailType('SalesItemLineDetail');
-            $Line->setAmount((float) $line['Amount']);
+            $datum['Line'][] = array(
+                "Description"         => $line['Description'],
+                "Amount"              => (float) $line['Amount'],
+                "DetailType"          => 'SalesItemLineDetail',
+                "SalesItemLineDetail" => array(
+                    "Qty"     => $line['Qty'],
+                    "ItemRef" => array(
+                        "value" => $line['ItemRef'],
+                        "name"  => 'dummy'
+                    )
+                )
+            );
 
-            $Details = new QuickBooks_IPP_Object_SalesItemLineDetail();
-            $Details->setQty($line['Qty']);
-            $Details->setItemRef($line['ItemRef']);
-            $Line->addSalesItemLineDetail($Details);
-            
-            @$items[] = $line['ItemRef'];
-
-            $SalesReceipt->addLine($Line);
+            if ( 'SHIPPING_ITEM_ID' != $line['ItemRef'] ) {
+                @$items[] = $line['ItemRef'];
+            }
         }
 
-        $SalesReceiptService = new QuickBooks_IPP_Service_SalesReceipt();
-        $resp = $SalesReceiptService->add($this->getQboContext(), $this->getQboRealm(), $SalesReceipt);
+        $entity = SalesReceipt::create($datum);
+        $result = $this->add($entity, 'Error in creating SalesReceipt on QBO: ');
 
-        if ($resp)
-        {
-            // Sync items to get updated quantity
-            $this->_syncItems($items);
+        // Sync items to get updated quantity
+        $this->_syncItems($items);
 
-            return QuickBooks_IPP_IDS::usableIDType($resp);
-        }
-        else throw new KControllerExceptionActionFailed('SalesReceipt Creation Error: ' . $SalesReceiptService->lastError($this->getQboContext()));
+        return $result->Id;
     }
 
     /**

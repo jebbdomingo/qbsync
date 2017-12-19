@@ -42,18 +42,9 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityAbstract
             ),
         ));
 
-        $result = $this->getDataService()->Add($customer);
-        $error  = $this->getDataService()->getLastError();
+        $result = $this->add($customer, 'Error in creating Customer on QBO: ');
 
-        if ($error)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-
-            throw new KControllerExceptionActionFailed('Error in creating Customer in QBO: ' . $error_message);
-        }
-        else return $result->Id;
+        return $result->Id;
     }
 
     /**
@@ -66,7 +57,7 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityAbstract
     public function update(array $data)
     {
         // Get the existing customer first (you need the latest SyncToken value)
-        $customer = $this->get($data['CustomerRef']);
+        $customer = $this->fetch('Customer', $data['CustomerRef']);
 
         $updated_customer = Customer::update($customer, array(
             // If you are going to do a full Update, set sparse to false
@@ -91,46 +82,6 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityAbstract
             )
         ));
 
-        $result = $this->getDataService()->Update($updated_customer);
-        $error  = $this->getDataService()->getLastError();
-
-        if ($error != null)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-            
-            throw new KControllerExceptionActionFailed('Error in updating Customer in QBO: ' . $error_message);
-        }
-    }
-
-    /**
-     * Get customer record
-     *
-     * @param  mixed $id]
-     *
-     * @return bool|object
-     */
-    public function get($id)
-    {
-        $result   = false;
-        $entities = $this->getDataService()->Query("SELECT * FROM Customer where Id='{$id}'");
-        $error    = $this->getDataService()->getLastError();
-
-        if ($error)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-            
-            throw new KControllerExceptionActionFailed('Error in updating Customer in QBO: ' . $error_message);
-        }
-
-        if (!empty($entities)) {
-            // Get the first element
-            $result = reset($entities);
-        }
-
-        return $result;
+        $result = $this->edit($updated_customer, 'Error in updating Customer on QBO: ');
     }
 }

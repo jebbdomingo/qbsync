@@ -22,7 +22,7 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
     public function create(array $data)
     {
         // Add a record
-        $data = Item::create(array(
+        $entity = Item::create(array(
             'Type'              => $data['Type'],
             'Name'              => $data['Name'],
             'Description'       => $data['Description'],
@@ -45,18 +45,9 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
             'InvStartDate'      => $data['InvStartDate'],
         ));
 
-        $result = $this->getDataService()->Add($data);
-        $error  = $this->getDataService()->getLastError();
+        $result = $this->add($entity, 'Error in creating Item on QBO: ');
 
-        if ($error)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-
-            throw new KControllerExceptionActionFailed('Error in creating Item in QBO: ' . $error_message);
-        }
-        else return $result->Id;
+        return $result->Id;
     }
 
     /**
@@ -79,17 +70,7 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
             'UnitPrice'   => $data['UnitPrice'],
         ));
 
-        $result = $this->getDataService()->Update($updated_entity);
-        $error  = $this->getDataService()->getLastError();
-
-        if ($error != null)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-            
-            throw new KControllerExceptionActionFailed('Error in updating Item in QBO: ' . $error_message);
-        }
+        $result = $this->edit($updated_entity, 'Error in updating Item on QBO: ');
     }
 
     /**
