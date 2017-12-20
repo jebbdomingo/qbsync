@@ -46,7 +46,6 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityAbstrac
                     "Qty"     => $line['Qty'],
                     "ItemRef" => array(
                         "value" => $line['ItemRef'],
-                        "name"  => 'dummy'
                     )
                 )
             );

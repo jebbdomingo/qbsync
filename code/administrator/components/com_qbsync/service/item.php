@@ -32,15 +32,12 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
             'QtyOnHand'         => $data['QtyOnHand'],
             'IncomeAccountRef'  => array(
                 'value' => $data['IncomeAccountRef'],
-                'name'  => 'Sales income'
             ),
             'ExpenseAccountRef' => array(
                 'value' => $data['ExpenseAccountRef'],
-                'name'  => 'Cost of goods sold'
             ),
             'AssetAccountRef'   => array(
                 'value' => $data['AssetAccountRef'],
-                'name'  => 'Inventory asset'
             ),
             'InvStartDate'      => $data['InvStartDate'],
         ));
@@ -71,5 +68,16 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
         ));
 
         $result = $this->edit($updated_entity, 'Error in updating Item on QBO: ');
+    }
+
+    /**
+     * Get item
+     *
+     * @param  mixed $ItemRef
+     * @return bool|QuickBooksOnline\API\Facades
+     */
+    public function get($ItemRef)
+    {
+        return $this->fetch('Item', $ItemRef);
     }
 }
