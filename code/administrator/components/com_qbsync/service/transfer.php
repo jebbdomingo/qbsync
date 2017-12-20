@@ -21,11 +21,17 @@ class ComQbsyncServiceTransfer extends ComQbsyncQuickbooksModelEntityAbstract
     public function create(array $data)
     {
         $datum = array(
-            'FromAccountRef' => $data['FromAccountRef'],
-            'ToAccountRef'   => $data['ToAccountRef'],
-            'Amount'         => $data['Amount'],
-            'TxnDate'        => $data['TxnDate'],
-            'PrivateNote'    => "NUC-TRN-{$data['PrivateNote']}",
+            'FromAccountRef' => array(
+                'value' => $data['FromAccountRef']
+            ),
+
+            'ToAccountRef' => array(
+                'value' => $data['ToAccountRef']
+            ),
+
+            'Amount'      => $data['Amount'],
+            'TxnDate'     => $data['TxnDate'],
+            'PrivateNote' => "NUC-TRN-{$data['PrivateNote']}",
         );
 
         $entity = Transfer::create($datum);

@@ -45,6 +45,16 @@ class ComQbsyncModelQbos extends KObject
     }
 
     /**
+     * Save
+     *
+     * @return boolean
+     */
+    public function save()
+    {
+        return $this->getEntity()->save();
+    }
+
+    /**
      * Get config entity
      *
      * @return KModelEntityInterface
