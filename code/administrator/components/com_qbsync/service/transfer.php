@@ -8,32 +8,29 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComQbsyncServiceTransfer extends ComQbsyncQuickbooksModelEntityRow
+use QuickBooksOnline\API\Facades\Transfer;
+
+class ComQbsyncServiceTransfer extends ComQbsyncQuickbooksModelEntityAbstract
 {
     /**
      * Create transfer transaction
      *
-     * @param array  $data
-     * @throws Exception
-     * @return string
+     * @param  array  $data
+     * @return mixed
      */
     public function create(array $data)
     {
-        $Transfer = new QuickBooks_IPP_Object_Transfer();
-        $Transfer->setFromAccountRef($data['FromAccountRef']);
-        $Transfer->setToAccountRef($data['ToAccountRef']);
-        $Transfer->setAmount($data['Amount']);
-        $Transfer->setTxnDate($data['TxnDate']);
-        $Transfer->setPrivateNote("NUC-TRN-{$data['PrivateNote']}");
+        $datum = array(
+            'FromAccountRef' => $data['FromAccountRef'],
+            'ToAccountRef'   => $data['ToAccountRef'],
+            'Amount'         => $data['Amount'],
+            'TxnDate'        => $data['TxnDate'],
+            'PrivateNote'    => "NUC-TRN-{$data['PrivateNote']}",
+        );
 
-        $TransferService = new QuickBooks_IPP_Service_Transfer();
-        $resp = $TransferService->add($this->getQboContext(), $this->getQboRealm(), $Transfer);
+        $entity = Transfer::create($datum);
+        $result = $this->add($entity, 'Error in creating Transfer on QBO: ');
 
-        if ($resp) {
-            return QuickBooks_IPP_IDS::usableIDType($resp);
-        } else {
-            $data = print_r($data, true);
-            throw new KControllerExceptionActionFailed('Error creating the Transfer in QBO: ' . $TransferService->lastError($this->getQboContext()) . $data);
-        }
+        return $result->Id;
     }
 }

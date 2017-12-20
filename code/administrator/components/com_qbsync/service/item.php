@@ -60,7 +60,7 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
     public function update(array $data)
     {
         // Get the existing entity first (you need the latest SyncToken value)
-        $entity = $this->get($data['ItemRef']);
+        $entity = $this->fetch('Item', $data['ItemRef']);
 
         $updated_entity = Item::update($entity, array(
             // If you are going to do a full Update, set sparse to false
@@ -71,35 +71,5 @@ class ComQbsyncServiceItem extends ComQbsyncQuickbooksModelEntityAbstract
         ));
 
         $result = $this->edit($updated_entity, 'Error in updating Item on QBO: ');
-    }
-
-    /**
-     * Get customer record
-     *
-     * @param  mixed $id]
-     *
-     * @return bool|object
-     */
-    public function get($id)
-    {
-        $result   = false;
-        $entities = $this->getDataService()->Query("SELECT * FROM Item where Id='{$id}'");
-        $error    = $this->getDataService()->getLastError();
-
-        if ($error)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-            
-            throw new KControllerExceptionActionFailed('Error in querying Items in QBO: ' . $error_message);
-        }
-
-        if (!empty($entities)) {
-            // Get the first element
-            $result = reset($entities);
-        }
-
-        return $result;
     }
 }

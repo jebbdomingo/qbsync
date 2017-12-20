@@ -9,21 +9,23 @@ use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
 
 
 $dataService = DataService::Configure(array(
-  'auth_mode' => 'oauth2',
-  'ClientID' => "Q0fXL014zAv3wzmlhwXMEHTrKepfAshCRjztEu58ZokzCD5T7D",
-  'ClientSecret' => "stfnZfuSZUDay6cJSWtvQ9HkWiKFbcI9YuBTET5P",
-  'RedirectURI' => "https://b200efd8.ngrok.io/OAuth2_c/OAuth_2/OAuth2PHPExample.php",
-  'scope' => "com.intuit.quickbooks.accounting",
-  'baseUrl' => "development"
+  'auth_mode'    => 'oauth2',
+  'ClientID'     => "L0vlXq781VLVbZiKEh2lgh5pA0yZt04Vq9lP4c6y5hLkf6LwNZ",
+  'ClientSecret' => "cQPD3eEb743sOmTFKA434DHEW9cSkR4sCPfIpS5B",
+  'RedirectURI'  => "https://b200efd8.ngrok.io/OAuth2_c/OAuth_2/OAuth2PHPExample.php",
+  'scope'        => "com.intuit.quickbooks.accounting",
+  'baseUrl'      => "development"
 ));
 
 
 $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
 
 $url = $OAuth2LoginHelper->getAuthorizationCodeURL();
+echo '<pre>' . print_r($url, true) . '</pre>';
+die('test');
 //It will return something like:https://b200efd8.ngrok.io/OAuth2_c/OAuth_2/OAuth2PHPExample.php?state=RandomState&code=Q0115106996168Bqap6xVrWS65f2iXDpsePOvB99moLCdcUwHq&realmId=193514538214074
 //get the Code and realmID, use for the exchangeAuthorizationCodeForToken
-$accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken("Q011510688430mhfd9mAwpsiB8eWAMPqjDO4j2WKmMWyeN96Ru", "193514538214074");
+$accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken("Q011513665501pGmgv6UCdZUS4vpLXQc9qJuktqxPCBfI6kqmM", "123145946400044");
 $dataService->updateOAuth2Token($accessToken);
 $dataService->throwExceptionOnError(true);
 $CompanyInfo = $dataService->getCompanyInfo();

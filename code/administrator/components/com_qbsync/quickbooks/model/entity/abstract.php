@@ -35,29 +35,23 @@ class ComQbsyncQuickbooksModelEntityAbstract extends KModelEntityRow
         parent::__construct($config);
 
         $data_service = DataService::Configure(array(
-                'auth_mode'       => $config->auth_mode,
-                'ClientID'        => $config->client_id,
-                'ClientSecret'    => $config->client_secret,
-                'accessTokenKey'  => $config->access_token,
-                'refreshTokenKey' => $config->refresh_token,
-                'QBORealmID'      => $config->realm_id,
-                'baseUrl'         => $config->base_url
+            'auth_mode'       => $config->auth_mode,
+            'ClientID'        => $config->client_id,
+            'ClientSecret'    => $config->client_secret,
+            'accessTokenKey'  => $config->access_token,
+            'refreshTokenKey' => $config->refresh_token,
+            'QBORealmID'      => $config->realm_id,
+            'baseUrl'         => $config->base_url,
+            'scope'           => $config->scope,
         ));
 
         // Log path
         $data_service->setLogLocation($config->log_path);
 
-        $this->_data_service = $data_service;
+        $this->setDataService($data_service);
 
-        // Test configuration
-        $company_info = $data_service->getCompanyInfo();
-        $error        = $data_service->getLastError();
-
-        if ($error != null) {
-            $this->setProperty('_qbo_connected', false);
-        } else {
-            $this->setProperty('_qbo_connected', true);
-        }
+        // Check OAuth2 connection
+        $this->refreshConnection();
     }
 
     /**
@@ -69,20 +63,71 @@ class ComQbsyncQuickbooksModelEntityAbstract extends KModelEntityRow
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $data = $this->getObject('com://site/rewardlabs.accounting.data');
+        $qbo = $this->getObject('com:qbsync.model.qbos');
 
         $config->append(array(
             'auth_mode'     => 'oauth2',
-            'client_id'     => $data->CONFIG_CLIENT_ID,
-            'client_secret' => $data->CONFIG_CLIENT_SECRET,
-            'access_token'  => $data->CONFIG_ACCESS_TOKEN,
-            'refresh_token' => $data->CONFIG_REFRESH_TOKEN,
-            'realm_id'      => $data->CONFIG_REALM_ID,
-            'base_url'      => $data->CONFIG_BASE_URL,
-            'log_path'      => $data->CONFIG_LOG_PATH
+            'client_id'     => $qbo->CONFIG_CLIENT_ID,
+            'client_secret' => $qbo->CONFIG_CLIENT_SECRET,
+            'access_token'  => $qbo->CONFIG_ACCESS_TOKEN,
+            'refresh_token' => $qbo->CONFIG_REFRESH_TOKEN,
+            'realm_id'      => $qbo->CONFIG_REALM_ID,
+            'base_url'      => $qbo->CONFIG_BASE_URL,
+            'log_path'      => $qbo->CONFIG_LOG_PATH,
+            'scope'         => 'com.intuit.quickbooks.accounting',
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Generate new token
+     *
+     * @return void
+     */
+    protected function refreshConnection()
+    {
+        // Test connection
+        $CompanyInfo = $this->getDataService()->getCompanyInfo();
+        $error = $this->getDataService()->getLastError();
+
+        if ($error != null)
+        {
+            $OAuth2LoginHelper = $this->getDataService()->getOAuth2LoginHelper();
+
+            $accessToken = $OAuth2LoginHelper->refreshToken();
+            $error       = $OAuth2LoginHelper->getLastError();
+
+            if ($error != null)
+            {
+                echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+                echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+                echo "The Response message is: " . $error->getResponseBody() . "\n";
+                
+                throw new KControllerExceptionActionFailed("Error in generating new access token from QBO");
+            }
+
+            $this->getDataService()->updateOAuth2Token($accessToken);
+
+            $CompanyInfo = $this->getDataService()->getCompanyInfo();
+
+            $error = $this->getDataService()->getLastError();
+            if ($error != null)
+            {
+                echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+                echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+                echo "The Response message is: " . $error->getResponseBody() . "\n";
+
+                throw new KControllerExceptionActionFailed("Problem connecting to QBO after access token regeneration");
+            }
+
+            // Set new refresh token
+            $qbo = $this->getObject('com:qbsync.model.qbos');
+            $qbo->CONFIG_ACCESS_TOKEN          = $accessToken->getAccessToken();
+            $qbo->CONFIG_REFRESH_TOKEN         = $accessToken->getRefreshToken();
+            $qbo->CONFIG_ACCESS_TOKEN_EXPIRES  = $accessToken->getAccessTokenExpiresAt();
+            $qbo->CONFIG_REFRESH_TOKEN_EXPIRES = $accessToken->getRefreshTokenExpiresAt();
+        }
     }
 
     /**
@@ -92,7 +137,25 @@ class ComQbsyncQuickbooksModelEntityAbstract extends KModelEntityRow
      */
     public function isQboConnected()
     {
-        return $this->_qbo_connected;
+        $company_info = $this->getDataService()->getCompanyInfo();
+        $error        = $this->getDataService()->getLastError();
+
+        if ($error != null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Get data service
+     *
+     * @param  QuickBooksOnline\API\DataService\DataService $data_service
+     * @return void
+     */
+    public function setDataService($data_service)
+    {
+        return $this->_data_service = $data_service;
     }
 
     /**

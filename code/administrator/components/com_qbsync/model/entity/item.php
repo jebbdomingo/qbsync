@@ -61,7 +61,7 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityAbstract
     {
         $result = false;
 
-        $Item = $this->_fetchItem($this->ItemRef);
+        $Item = $this->fetch('Item', $this->ItemRef);
 
         if ($Item !== false)
         {
@@ -82,43 +82,6 @@ class ComQbsyncModelEntityItem extends ComQbsyncQuickbooksModelEntityAbstract
     public function delete()
     {
         return false;
-    }
-
-    protected function _fetchItem($ItemRef = null)
-    {
-        $result = false;
-
-        if (is_null($ItemRef))
-        {
-            $items = $this->getDataService()->Query("SELECT * FROM Item");
-        }
-        else
-        {
-            $items = $this->getDataService()->Query("SELECT * FROM Item where Id='{$ItemRef}'");
-
-            if (!empty($items)) {
-                // Get the first element
-                $items = reset($items);
-            }
-        }
-
-        $error = $this->getDataService()->getLastError();
-        if ($error)
-        {
-            $error_message = "The Status code is: {$error->getHttpStatusCode()}\n";
-            $error_message .= "The Helper message is: {$error->getOAuthHelperError()}\n";
-            $error_message .= "The Response message is: {$error->getResponseBody()}\n";
-            
-            throw new KControllerExceptionActionFailed('Error in Querying Item(s) in QBO: ' . $error_message);
-        }
-
-        if (count($items) == 0) {
-            $this->setStatusMessage("Invalid ItemRef {$ItemRef}");
-        } else {
-            $result = $items;
-        }
-
-        return $result;
     }
 
     /**

@@ -68,10 +68,8 @@ class ComQbsyncServiceSalesreceipt extends ComQbsyncQuickbooksModelEntityAbstrac
     /**
      * Sync items
      *
-     * @param array $ids
-     *
-     * @throws Exception
-     *
+     * @throws KControllerExceptionActionFailed
+     * @param  array $ids
      * @return void
      */
     protected function _syncItems(array $ids)
