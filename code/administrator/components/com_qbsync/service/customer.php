@@ -84,4 +84,15 @@ class ComQbsyncServiceCustomer extends ComQbsyncQuickbooksModelEntityAbstract
 
         $result = $this->edit($updated_customer, 'Error in updating Customer on QBO: ');
     }
+
+    /**
+     * Get customer
+     *
+     * @param  mixed $CustomerRef
+     * @return bool|QuickBooksOnline\API\Facades
+     */
+    public function get($CustomerRef)
+    {
+        return $this->fetch('Customer', $CustomerRef);
+    }
 }
