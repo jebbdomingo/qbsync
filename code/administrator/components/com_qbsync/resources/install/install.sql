@@ -1,3 +1,4 @@
+
 # Dump of table #__qbsync_items
 # ------------------------------------------------------------
 
@@ -36,3 +37,28 @@ CREATE TABLE `#__qbsync_items` (
   `modified_by` int(11) NOT NULL,
   PRIMARY KEY (`qbsync_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+# Dump of table #__qbsync_configs
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `#__qbsync_configs`;
+
+CREATE TABLE `#__qbsync_configs` (
+  `qbsync_config_id` int(11) NOT NULL AUTO_INCREMENT,
+  `item` varchar(255) NOT NULL COMMENT 'Configuration item',
+  `value` longtext NOT NULL COMMENT 'Configuration item value',
+  PRIMARY KEY (`qbsync_config_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `#__qbsync_configs` WRITE;
+/*!40000 ALTER TABLE `#__qbsync_configs` DISABLE KEYS */;
+
+INSERT INTO `#__qbsync_configs` (`qbsync_config_id`, `item`, `value`)
+VALUES
+  (1,'qbo_local','{}'),
+  (2,'qbo_staging','{}'),
+  (3,'qbo_production','{}');
+
+/*!40000 ALTER TABLE `#__qbsync_configs` ENABLE KEYS */;
+UNLOCK TABLES;
